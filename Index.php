@@ -13,9 +13,11 @@ if (!isset($_GET['section'])) {
     <title>Clientportal v2 prototype</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- hier kun je later je echte CSS-bestand linken -->
+    <!-- koppel externe CSS -->
+    <link rel="stylesheet" href="main.css?v=1">
 </head>
 <body>
+
 
 <?php
 // Include your LC3-page-v2 template here

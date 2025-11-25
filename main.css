@@ -1,0 +1,292 @@
+:root {
+    /* primary brand color */
+    --cp-primary: #59a1a7;
+
+    /* tints of the same color, different opacity */
+    --cp-primary-soft: rgba(89, 161, 167, 0.15);   /* used for active backgrounds */
+    --cp-primary-softer: rgba(89, 161, 167, 0.07); /* subtle hovers / fills */
+    --cp-primary-strong: rgba(89, 161, 167, 0.25); /* stronger highlight */
+
+    /* neutrals */
+    --cp-bg: #f5f7fb;
+    --cp-border-subtle: #dde1ea;
+}
+
+/* ROOT / LAYOUT */
+.cp-v2-root {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--cp-bg);
+    padding: 20px;
+    box-sizing: border-box;
+}
+.cp-v2-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr) 320px;
+    gap: 16px;
+    align-items: flex-start;
+}
+.cp-v2-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    padding: 16px 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+.cp-v2-left,
+.cp-v2-main,
+.cp-v2-right {
+    min-height: 100px;
+}
+
+/* Icons */
+.cp-v2-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.cp-v2-icon--small {
+    width: 16px;
+    height: 16px;
+}
+.cp-v2-icon--tiny {
+    width: 14px;
+    height: 14px;
+}
+.cp-v2-icon--muted {
+    opacity: 0.6;
+}
+
+/* Avatar / header */
+.cp-v2-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.cp-v2-card-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.cp-v2-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    object-fit: cover;
+}
+
+/* TABS TOP */
+.cp-v2-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--cp-border-subtle);
+    align-items: flex-end;
+}
+.cp-v2-tab {
+    padding: 10px 16px;
+    border-radius: 6px 6px 0 0;
+    text-decoration: none;
+    color: #4b5563;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.cp-v2-tab--active {
+    background: var(--cp-primary-soft);
+    color: #1f2937;
+    font-weight: 600;
+    border-bottom: 2px solid var(--cp-primary);
+}
+
+/* TITLES / TEXT */
+.cp-v2-page-title {
+    font-size: 24px;
+    margin: 0 0 16px;
+    color: #111827;
+    font-weight: 600;
+}
+.cp-v2-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: #111827;
+}
+.cp-v2-small-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 16px 0 8px;
+    color: #111827;
+}
+.cp-v2-detail-list {
+    font-size: 13px;
+    margin: 8px 0 0;
+}
+.cp-v2-detail-list dt {
+    font-weight: 600;
+}
+.cp-v2-detail-list dd {
+    margin: 0 0 4px;
+}
+
+/* SIDE MENU */
+.cp-v2-side-menu {
+    margin-top: 24px;
+    font-size: 14px;
+}
+.cp-v2-side-menu a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #374151;
+    margin-bottom: 4px;
+}
+.cp-v2-side-menu a.cp-active {
+    background: var(--cp-primary-soft);
+    color: #1f2937;
+    font-weight: 600;
+}
+
+/* PRIMARY BUTTON */
+.cp-v2-button-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: var(--cp-primary);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+/* APPOINTMENT TILES */
+.cp-v2-appointments-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+.cp-v2-appointment-tile {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    border: 1px solid #e5e7eb;
+}
+.cp-v2-appointment-date {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.cp-v2-appointment-type {
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+.cp-v2-appointment-time {
+    color: #4b5563;
+    font-size: 12px;
+}
+
+/* TABLES */
+.cp-v2-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 13px;
+}
+.cp-v2-table th,
+.cp-v2-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+/* CHIPS / PILLS */
+.cp-v2-chip-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--cp-primary-softer); /* soft teal background */
+    font-size: 11px;
+    text-decoration: none;
+    color: #1f2937;
+    gap: 6px;
+}
+.cp-v2-chip-button--accent {
+    background: #f97373; /* je kunt deze eventueel ook naar een rood-tint laten als warning */
+    color: #ffffff;
+}
+
+/* ROW ACTIONS */
+.cp-v2-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+}
+.cp-v2-dot-menu {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* RIGHT SIDEBAR */
+.cp-v2-right-section {
+    margin-bottom: 16px;
+}
+
+/* TIMELINE */
+.cp-v2-timeline {
+    font-size: 12px;
+}
+.cp-v2-timeline-label {
+    font-weight: 600;
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+.cp-v2-timeline-item {
+    margin-left: 8px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+/* STATUS DOTS */
+.cp-v2-status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: rgba(89, 161, 167, 0.12); /* softer version of primary */
+}
+.cp-v2-status-pill--ok {
+    background: rgba(89, 161, 167, 0.25); /* slightly stronger for 'ok' */
+}
+
+/* Kleine bell rechtsboven in de main (notificatie) */
+.cp-v2-main-bell {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+}
