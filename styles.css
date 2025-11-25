@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700&display=swap');
+
+.thin {
+    font-family: 'Inter', sans-serif;
+    font-weight: 100;     /* dun */
+}
+
+.normal {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;     /* normaal */
+}
+
+.bold {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;     /* dik */
+}
+
+.button {
+    background-color: #59A1A7;
+    color: white;
+    padding: 1rem;
+}
+
+/* Algemene icon styling */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* Drie groottes */
+.icon-small {
+    font-size: 14px;
+}
+
+.icon-medium {
+    font-size: 18px;
+}
+
+.icon-large {
+    font-size: 24px;
+}
