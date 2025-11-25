@@ -45,6 +45,21 @@ $historyAppointments = array(
         array('date' => '21/09/2025', 'time' => '14:00–15:00', 'type' => 'Intakegesprek'),
     )),
 );
+
+// Kleine helper om een icoon bij een afspraaktype te kiezen
+function cp_v2_appointment_icon($type) {
+    $typeLower = mb_strtolower($type);
+    if (strpos($typeLower, 'beeldbellen') !== false) {
+        return 'icons/webcam-thin.svg';
+    }
+    if (strpos($typeLower, 'intake') !== false) {
+        return 'icons/user-sound-thin.svg';
+    }
+    if (strpos($typeLower, 'behandeling') !== false) {
+        return 'icons/calendar-dots-thin.svg';
+    }
+    return 'icons/info-thin.svg';
+}
 ?>
 
 <style>
@@ -66,17 +81,58 @@ $historyAppointments = array(
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
         padding: 16px 20px;
         box-sizing: border-box;
+        position: relative;
     }
     .cp-v2-left,
     .cp-v2-main,
     .cp-v2-right {
         min-height: 100px;
     }
+
+    /* Icons */
+    .cp-v2-icon {
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+    .cp-v2-icon--small {
+        width: 16px;
+        height: 16px;
+    }
+    .cp-v2-icon--tiny {
+        width: 14px;
+        height: 14px;
+    }
+    .cp-v2-icon--muted {
+        opacity: 0.6;
+    }
+
+    /* Avatar / header */
+    .cp-v2-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+    .cp-v2-card-title-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .cp-v2-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        object-fit: cover;
+    }
+
     .cp-v2-tabs {
         display: flex;
         gap: 12px;
         margin-bottom: 16px;
         border-bottom: 1px solid #dde1ea;
+        align-items: flex-end;
     }
     .cp-v2-tab {
         padding: 10px 16px;
@@ -84,6 +140,9 @@ $historyAppointments = array(
         text-decoration: none;
         color: #4b5563;
         font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
     .cp-v2-tab--active {
         background: #e5f3ff;
@@ -91,6 +150,7 @@ $historyAppointments = array(
         font-weight: 600;
         border-bottom: 2px solid #2f7abf;
     }
+
     .cp-v2-page-title {
         font-size: 24px;
         margin: 0 0 16px;
@@ -163,7 +223,13 @@ $historyAppointments = array(
         border: 1px solid #e5e7eb;
     }
     .cp-v2-appointment-date { font-weight: 600; margin-bottom: 2px; }
-    .cp-v2-appointment-type { color: #111827; }
+    .cp-v2-appointment-type {
+        color: #111827;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 2px;
+    }
     .cp-v2-appointment-time { color: #4b5563; font-size: 12px; }
 
     .cp-v2-table {
@@ -188,13 +254,37 @@ $historyAppointments = array(
         font-size: 11px;
         text-decoration: none;
         color: #1f2937;
+        gap: 6px;
     }
     .cp-v2-chip-button--accent {
         background: #f97373;
         color: #ffffff;
     }
+
+    .cp-v2-row-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        justify-content: flex-end;
+    }
+    .cp-v2-dot-menu {
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        border: none;
+        background: transparent;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
     .cp-v2-right-section { margin-bottom: 16px; }
-    .cp-v2-timeline { font-size: 12px; }
+
+    .cp-v2-timeline {
+        font-size: 12px;
+    }
     .cp-v2-timeline-label {
         font-weight: 600;
         margin-top: 8px;
@@ -203,6 +293,29 @@ $historyAppointments = array(
     .cp-v2-timeline-item {
         margin-left: 8px;
         margin-bottom: 4px;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .cp-v2-status-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: #fee2e2;
+    }
+    .cp-v2-status-pill--ok {
+        background: #dcfce7;
+    }
+
+    /* Kleine bell rechtsboven in de main (notificatie) */
+    .cp-v2-main-bell {
+        position: absolute;
+        top: 18px;
+        right: 20px;
     }
 </style>
 
@@ -212,14 +325,26 @@ $historyAppointments = array(
         <!-- LEFT SIDEBAR -->
         <aside class="cp-v2-left">
             <div class="cp-v2-card">
-                <div class="cp-v2-section-title">
-                    <?= htmlspecialchars($client['praktijk_naam']) ?>
-                </div>
-                <div style="font-size:12px;color:#6b7280;">
-                    <?= htmlspecialchars($client['praktijk_url']) ?>
+                <div class="cp-v2-card-header">
+                    <div class="cp-v2-card-title-group">
+                        <img src="profilepic.png" alt="Praktijk logo" class="cp-v2-avatar" />
+                        <div>
+                            <div class="cp-v2-section-title">
+                                <?= htmlspecialchars($client['praktijk_naam']) ?>
+                            </div>
+                            <div style="font-size:12px;color:#6b7280;">
+                                <?= htmlspecialchars($client['praktijk_url']) ?>
+                            </div>
+                        </div>
+                    </div>
+                    <img src="icons/dots-three-vertical-thin.svg" alt="Meer opties" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
                 </div>
 
-                <div class="cp-v2-small-title" style="margin-top:16px;">Mijn gegevens</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;margin-bottom:4px;font-size:13px;font-weight:600;color:#111827;">
+                    <img src="icons/user-circle-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
+                    <span>Mijn gegevens</span>
+                </div>
+
                 <dl class="cp-v2-detail-list">
                     <dt>Naam:</dt>
                     <dd><?= htmlspecialchars($client['naam']) ?></dd>
@@ -243,18 +368,23 @@ $historyAppointments = array(
 
             <nav class="cp-v2-side-menu">
                 <a href="?section=overzicht" class="<?= $section=='overzicht'?'cp-active':'' ?>">
+                    <img src="icons/gear-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
                     Wijzig profiel
                 </a>
                 <a href="?section=overzicht">
+                    <img src="icons/key-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
                     Wijzig wachtwoord
                 </a>
                 <a href="?section=documenten" class="<?= $section=='documenten' || $section=='documenten_upload' ? 'cp-active' : '' ?>">
+                    <img src="icons/download-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
                     Downloads / Documenten
                 </a>
                 <a href="?section=overzicht">
+                    <img src="icons/phone-call-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
                     Bel me terug
                 </a>
                 <a href="?section=overzicht">
+                    <img src="icons/info-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
                     Stel een vraag
                 </a>
             </nav>
@@ -263,13 +393,30 @@ $historyAppointments = array(
         <!-- MAIN COLUMN -->
         <main class="cp-v2-main">
             <nav class="cp-v2-tabs">
-                <a href="?section=overzicht" class="cp-v2-tab <?= $section=='overzicht'?'cp-v2-tab--active':'' ?>">Overzicht</a>
-                <a href="?section=statistiek" class="cp-v2-tab <?= $section=='statistiek'?'cp-v2-tab--active':'' ?>">Statistiek</a>
-                <a href="?section=documenten" class="cp-v2-tab <?= $section=='documenten' || $section=='documenten_upload'?'cp-v2-tab--active':'' ?>">Documenten</a>
-                <a href="?section=dossier" class="cp-v2-tab <?= $section=='dossier'?'cp-v2-tab--active':'' ?>">Dossier</a>
+                <a href="?section=overzicht" class="cp-v2-tab <?= $section=='overzicht'?'cp-v2-tab--active':'' ?>">
+                    <img src="icons/house-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                    Overzicht
+                </a>
+                <a href="?section=statistiek" class="cp-v2-tab <?= $section=='statistiek'?'cp-v2-tab--active':'' ?>">
+                    <img src="icons/gauge-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                    Statistiek
+                </a>
+                <a href="?section=documenten" class="cp-v2-tab <?= $section=='documenten' || $section=='documenten_upload'?'cp-v2-tab--active':'' ?>">
+                    <img src="icons/file-text-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                    Documenten
+                </a>
+                <a href="?section=dossier" class="cp-v2-tab <?= $section=='dossier'?'cp-v2-tab--active':'' ?>">
+                    <img src="icons/archive-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                    Dossier
+                </a>
             </nav>
 
             <div class="cp-v2-card">
+                <!-- notificatiebel -->
+                <div class="cp-v2-main-bell">
+                    <img src="icons/bell-thin.svg" alt="Meldingen" class="cp-v2-icon cp-v2-icon--tiny" />
+                </div>
+
                 <h1 class="cp-v2-page-title">
                     Welkom <?= htmlspecialchars($client['naam']) ?>
                 </h1>
@@ -279,7 +426,8 @@ $historyAppointments = array(
                     <div>
                         <div class="cp-v2-section-title">Komende afspraken</div>
                         <a href="#" class="cp-v2-button-primary" style="margin-top:4px;margin-bottom:8px;">
-                            + Maak een nieuwe afspraak
+                            <img src="icons/plus-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                            Maak een nieuwe afspraak
                         </a>
                         <div class="cp-v2-appointments-row">
                             <?php foreach ($upcomingAppointments as $afs): ?>
@@ -288,7 +436,8 @@ $historyAppointments = array(
                                         <?= htmlspecialchars($afs['date']) ?>
                                     </div>
                                     <div class="cp-v2-appointment-type">
-                                        <?= htmlspecialchars($afs['type']) ?>
+                                        <img src="<?= cp_v2_appointment_icon($afs['type']) ?>" alt="" class="cp-v2-icon cp-v2-icon--small" />
+                                        <span><?= htmlspecialchars($afs['type']) ?></span>
                                     </div>
                                     <div class="cp-v2-appointment-time">
                                         <?= htmlspecialchars($afs['time']) ?>
@@ -307,7 +456,7 @@ $historyAppointments = array(
                             <tr>
                                 <th>Onderwerp</th>
                                 <th>Datum</th>
-                                <th></th>
+                                <th style="text-align:right;"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -316,9 +465,18 @@ $historyAppointments = array(
                                     <td><?= htmlspecialchars($q['titel']) ?></td>
                                     <td><?= htmlspecialchars($q['datum']) ?></td>
                                     <td>
-                                        <a href="#" class="cp-v2-chip-button">
-                                            Vragenlijst openen
-                                        </a>
+                                        <div class="cp-v2-row-actions">
+                                            <span class="cp-v2-status-pill">
+                                                <img src="icons/file-archive-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                            </span>
+                                            <a href="#" class="cp-v2-chip-button">
+                                                <img src="icons/file-text-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                                Vragenlijst openen
+                                            </a>
+                                            <button class="cp-v2-dot-menu" type="button">
+                                                <img src="icons/dots-three-vertical-thin.svg" alt="Meer opties" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -333,7 +491,7 @@ $historyAppointments = array(
                                 <th>Datum</th>
                                 <th>Totaal</th>
                                 <th>Te betalen</th>
-                                <th></th>
+                                <th style="text-align:right;"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -344,9 +502,18 @@ $historyAppointments = array(
                                     <td><?= htmlspecialchars($inv['total']) ?></td>
                                     <td><?= htmlspecialchars($inv['due']) ?></td>
                                     <td>
-                                        <a href="#" class="cp-v2-chip-button cp-v2-chip-button--accent">
-                                            Factuur betalen
-                                        </a>
+                                        <div class="cp-v2-row-actions">
+                                            <span class="cp-v2-status-pill">
+                                                <img src="icons/credit-card-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                            </span>
+                                            <a href="#" class="cp-v2-chip-button cp-v2-chip-button--accent">
+                                                <img src="icons/credit-card-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                                Factuur betalen
+                                            </a>
+                                            <button class="cp-v2-dot-menu" type="button">
+                                                <img src="icons/dots-three-vertical-thin.svg" alt="Meer opties" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -357,7 +524,10 @@ $historyAppointments = array(
                 <?php elseif ($section === 'statistiek'): ?>
 
                     <div>
-                        <div class="cp-v2-section-title">Mijn behandeltraject</div>
+                        <div class="cp-v2-section-title">
+                            <img src="icons/gauge-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
+                            &nbsp;Mijn behandeltraject
+                        </div>
                         <p style="font-size:13px;color:#6b7280;">
                             Hier komen straks de grafieken en statistieken (pie charts, bar charts, etc.).
                         </p>
@@ -366,9 +536,13 @@ $historyAppointments = array(
                 <?php elseif ($section === 'documenten'): ?>
 
                     <div>
-                        <div class="cp-v2-section-title">Mijn documenten</div>
+                        <div class="cp-v2-section-title">
+                            <img src="icons/file-archive-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
+                            &nbsp;Mijn documenten
+                        </div>
                         <a href="?section=documenten_upload" class="cp-v2-button-primary" style="margin-top:4px;margin-bottom:8px;">
-                            + Upload een document
+                            <img src="icons/plus-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                            Upload een document
                         </a>
 
                         <table class="cp-v2-table">
@@ -377,7 +551,7 @@ $historyAppointments = array(
                                 <th>Naam document</th>
                                 <th>Actiedatum</th>
                                 <th>Omschrijving</th>
-                                <th></th>
+                                <th style="text-align:right;"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -385,13 +559,23 @@ $historyAppointments = array(
                                 <td>Document 1</td>
                                 <td>20/09/2024</td>
                                 <td>Lorem ipsum</td>
-                                <td><a href="#" class="cp-v2-chip-button">Download</a></td>
+                                <td style="text-align:right;">
+                                    <a href="#" class="cp-v2-chip-button">
+                                        <img src="icons/download-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                        Download
+                                    </a>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Document 2</td>
                                 <td>20/09/2024</td>
                                 <td>Lorem ipsum</td>
-                                <td><a href="#" class="cp-v2-chip-button">Download</a></td>
+                                <td style="text-align:right;">
+                                    <a href="#" class="cp-v2-chip-button">
+                                        <img src="icons/download-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                        Download
+                                    </a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -400,24 +584,37 @@ $historyAppointments = array(
                 <?php elseif ($section === 'documenten_upload'): ?>
 
                     <div>
-                        <div class="cp-v2-section-title">Upload een document</div>
+                        <div class="cp-v2-section-title">
+                            <img src="icons/file-arrow-up-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
+                            &nbsp;Upload een document
+                        </div>
                         <p style="font-size:13px;color:#6b7280;margin-bottom:12px;">
                             Hier komt later de echte uploadcomponent met drag &amp; drop / voortgangsbalk.
                         </p>
                         <div class="cp-v2-card" style="border:2px dashed #d1d5db;text-align:center;">
-                            Klik om een document te uploaden (placeholder)
+                            <img src="icons/file-pdf-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
+                            &nbsp;Klik om een document te uploaden (placeholder)
                         </div>
 
                         <div style="margin-top:16px;display:flex;gap:8px;">
-                            <a href="#" class="cp-v2-button-primary">Opslaan</a>
-                            <a href="#" class="cp-v2-chip-button">Verwijderen</a>
+                            <a href="#" class="cp-v2-button-primary">
+                                <img src="icons/check-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                Opslaan
+                            </a>
+                            <a href="#" class="cp-v2-chip-button">
+                                <img src="icons/trash-simple-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                Verwijderen
+                            </a>
                         </div>
                     </div>
 
                 <?php else: /* dossier */ ?>
 
                     <div>
-                        <div class="cp-v2-section-title">Dossier</div>
+                        <div class="cp-v2-section-title">
+                            <img src="icons/archive-fill.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
+                            &nbsp;Dossier
+                        </div>
                         <p style="font-size:13px;color:#6b7280;">
                             Hier komt later het dossier-overzicht / notities / verslagen.
                         </p>
@@ -435,9 +632,14 @@ $historyAppointments = array(
                     Tabs (Alle / Te doen / Voldaan) komen hier later.
                 </p>
                 <?php foreach ($todoQuestionnaires as $q): ?>
-                    <div style="font-size:12px;margin-bottom:6px;">
-                        <strong><?= htmlspecialchars($q['titel']) ?></strong><br>
-                        <span><?= htmlspecialchars($q['datum']) ?></span>
+                    <div style="font-size:12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                        <div>
+                            <strong><?= htmlspecialchars($q['titel']) ?></strong><br>
+                            <span><?= htmlspecialchars($q['datum']) ?></span>
+                        </div>
+                        <span class="cp-v2-status-pill">
+                            <img src="icons/bell-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                        </span>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -448,11 +650,16 @@ $historyAppointments = array(
                     Tabs (Alle / Openstaand / Voldaan) komen hier later.
                 </p>
                 <?php foreach ($openInvoices as $inv): ?>
-                    <div style="font-size:12px;margin-bottom:6px;">
-                        <a href="#" style="text-decoration:none;color:#2563eb;">
-                            #<?= (int)$inv['nr'] ?>
-                        </a>
-                        &nbsp;– <?= htmlspecialchars($inv['date']) ?> – €<?= htmlspecialchars($inv['total']) ?>
+                    <div style="font-size:12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                        <div>
+                            <a href="#" style="text-decoration:none;color:#2563eb;">
+                                #<?= (int)$inv['nr'] ?>
+                            </a>
+                            &nbsp;– <?= htmlspecialchars($inv['date']) ?> – €<?= htmlspecialchars($inv['total']) ?>
+                        </div>
+                        <span class="cp-v2-status-pill">
+                            <img src="icons/credit-card-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                        </span>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -466,7 +673,10 @@ $historyAppointments = array(
                         </div>
                         <?php foreach ($group['items'] as $item): ?>
                             <div class="cp-v2-timeline-item">
-                                <?= htmlspecialchars($item['time']) ?> – <?= htmlspecialchars($item['type']) ?>
+                                <img src="<?= cp_v2_appointment_icon($item['type']) ?>" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                <div>
+                                    <?= htmlspecialchars($item['time']) ?> – <?= htmlspecialchars($item['type']) ?>
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     <?php endforeach; ?>
