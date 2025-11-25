@@ -286,20 +286,82 @@
 
 /* TIMELINE */
 .cp-v2-timeline {
+    margin-top: 8px;
     font-size: 12px;
 }
+
+.cp-v2-timeline-row {
+    display: flex;
+    align-items: flex-start;
+    padding-bottom: 3px;              /* space above the line */
+    margin-bottom: 4px;
+    border-bottom: 1px solid #e5e7eb; /* subtle grey separator */
+}
+
+/* no line under the last one */
+.cp-v2-timeline-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* left column: only the diamond now */
+.cp-v2-timeline-axis {
+    position: relative;
+    width: 18px;
+    display: flex;
+    justify-content: center;
+}
+
+/* small teal diamond */
+.cp-v2-timeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    transform: rotate(45deg);
+    background: var(--cp-primary);  /* #59a1a7 */
+    margin-top: 10px;               /* sits between label and first row */
+}
+
+/* right column: content */
+.cp-v2-timeline-content {
+    padding-left: 6px;
+    margin-bottom: 6px;
+    flex: 1;
+}
+
 .cp-v2-timeline-label {
     font-weight: 600;
-    margin-top: 8px;
     margin-bottom: 4px;
 }
+
 .cp-v2-timeline-item {
-    margin-left: 8px;
-    margin-bottom: 4px;
     display: flex;
     align-items: flex-start;
     gap: 6px;
+    margin-bottom: 2px;             /* tighter gap to the divider line */
 }
+
+/* no extra gap under last item in a group */
+.cp-v2-timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.cp-v2-timeline-item-icon {
+    margin-top: 1px;
+}
+
+.cp-v2-timeline-time {
+    color: #6b7280;
+    margin-right: 4px;
+}
+
+.cp-v2-timeline-type {
+    color: var(--cp-primary);        /* appointment type in house green */
+    font-weight: 600;
+}
+
+
 
 /* STATUS DOTS */
 .cp-v2-status-pill {

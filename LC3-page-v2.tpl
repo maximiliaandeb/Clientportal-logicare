@@ -44,6 +44,12 @@ $historyAppointments = array(
     array('label' => '21/09/2025', 'items' => array(
         array('date' => '21/09/2025', 'time' => '14:00–15:00', 'type' => 'Intakegesprek'),
     )),
+    array('label' => '21/09/2025', 'items' => array(
+        array('date' => '21/09/2025', 'time' => '14:00–15:00', 'type' => 'Intakegesprek'),
+    )),
+        array('label' => '21/09/2025', 'items' => array(
+        array('date' => 'Gister',     'time' => '10:00–12:00', 'type' => 'Beeldbellen'),
+    )),
 );
 
 // Kleine helper om een icoon bij een afspraaktype te kiezen
@@ -56,7 +62,7 @@ function cp_v2_appointment_icon($type) {
         return 'icons/user-sound-thin.svg';
     }
     if (strpos($typeLower, 'behandeling') !== false) {
-        return 'icons/calendar-dots-bold.svg';
+        return 'icons/calendar-dots-thin.svg';
     }
     return 'icons/info-thin.svg';
 }
@@ -410,23 +416,44 @@ function cp_v2_appointment_icon($type) {
             </div>
 
             <div class="cp-v2-card cp-v2-right-section">
-                <div class="cp-v2-section-title">Afspraakshistorie</div>
-                <div class="cp-v2-timeline">
-                    <?php foreach ($historyAppointments as $group): ?>
-                        <div class="cp-v2-timeline-label">
-                            <?= htmlspecialchars($group['label']) ?>
-                        </div>
-                        <?php foreach ($group['items'] as $item): ?>
-                            <div class="cp-v2-timeline-item">
-                                <img src="<?= cp_v2_appointment_icon($item['type']) ?>" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
-                                <div>
-                                    <?= htmlspecialchars($item['time']) ?> – <?= htmlspecialchars($item['type']) ?>
-                                </div>
+    <div class="cp-v2-section-title">Afspraakshistorie</div>
+
+    <div class="cp-v2-timeline">
+        <?php foreach ($historyAppointments as $group): ?>
+            <div class="cp-v2-timeline-row">
+                <div class="cp-v2-timeline-axis">
+                    <div class="cp-v2-timeline-dot"></div>
+                </div>
+
+                <div class="cp-v2-timeline-content">
+                    <div class="cp-v2-timeline-label">
+                        <?= htmlspecialchars($group['label']) ?>
+                    </div>
+
+                    <?php foreach ($group['items'] as $item): ?>
+                        <div class="cp-v2-timeline-item">
+                            <div class="cp-v2-timeline-item-icon">
+                                <img src="<?= cp_v2_appointment_icon($item['type']) ?>"
+                                     alt=""
+                                     class="cp-v2-icon cp-v2-icon--tiny" />
                             </div>
-                        <?php endforeach; ?>
+                            <div class="cp-v2-timeline-item-text">
+                                <span class="cp-v2-timeline-time">
+                                    <?= htmlspecialchars($item['time']) ?>
+                                </span>
+                                <span class="cp-v2-timeline-type">
+                                    <?= htmlspecialchars($item['type']) ?>
+                                </span>
+                            </div>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+
         </aside>
 
     </div>
