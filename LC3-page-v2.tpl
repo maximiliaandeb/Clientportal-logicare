@@ -254,7 +254,7 @@ function cp_v2_appointment_icon($type) {
                                                 Factuur betalen
                                             </a>
                                             <button class="cp-v2-dot-menu" type="button">
-                                                <img src="icons/dots-three-vertical-thin.svg"
+                                                <img src="icons/dots-three-vertical-bold.svg"
                                                     alt="Meer opties"
                                                     class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
                                             </button>
