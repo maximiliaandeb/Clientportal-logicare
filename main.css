@@ -520,3 +520,456 @@
     filter: invert(54%) sepia(7%) saturate(1045%) hue-rotate(136deg)
             brightness(93%) contrast(91%);
 }
+
+
+/* MODAL (generic, reusable) */
+.cp-v2-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.cp-v2-modal-backdrop--hidden {
+    display: none;
+}
+
+.cp-v2-modal {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 22px 18px;
+    box-sizing: border-box;
+}
+
+.cp-v2-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.cp-v2-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cp-v2-modal-close {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    font-size: 18px;
+    color: #6b7280;
+}
+
+.cp-v2-modal-body {
+    font-size: 13px;
+    color: #374151;
+}
+
+.cp-v2-modal-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.cp-v2-modal-label {
+    color: #6b7280;
+}
+
+.cp-v2-modal-value {
+    font-weight: 500;
+}
+
+.cp-v2-modal-footer {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* neutral button in modal */
+.cp-v2-button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    font-size: 13px;
+    text-decoration: none;
+    color: #374151;
+    cursor: pointer;
+}
+
+/* tweak existing status pills so paid = #75b870 + white check */
+.cp-v2-status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: #eef5f5;
+}
+
+.cp-v2-status-pill--ok {
+    background: #75b870;
+}
+
+.cp-v2-status-pill--ok .cp-v2-icon {
+    width: 10px;
+    height: 10px;
+    filter: brightness(0) invert(1); /* make check white */
+}
+
+/* openstaande factuur: neutrale cirkel + rood bolletje */
+.cp-v2-status-pill--alert {
+    position: relative;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+}
+
+.cp-v2-status-pill-badge {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #f97373;
+    border: 1px solid #ffffff;
+}
+
+button.cp-v2-status-pill {
+    border: none;
+    outline: none;
+}
+
+button.cp-v2-status-pill:focus-visible {
+    outline: none;
+}
+
+/* === MODAL BACKDROP & ANIMATION === */
+.cp-v2-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* dark overlay + frosted glass */
+    background: rgba(15, 23, 42, 0.25);
+    backdrop-filter: blur(6px);
+
+    z-index: 9999;
+
+    /* start hidden, animated via extra classes */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+}
+
+/* fully invisible + non-interactive */
+.cp-v2-modal-backdrop--hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* visible state – JS adds/removes this */
+.cp-v2-modal-backdrop--active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* === MODAL OVERLAY + BASIC POSITION / ANIMATION === */
+
+.cp-v2-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.25);   /* donker + beetje glas */
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease-out;
+    z-index: 998;
+}
+
+/* overlay zichtbaar */
+.cp-v2-modal-overlay--visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* buitenste modal-container (wordt gecentreerd) */
+.cp-v2-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.97);
+    opacity: 0;
+    z-index: 999;
+    transition: transform 0.18s ease-out, opacity 0.18s ease-out;
+}
+
+/* zichtbaar + geanimeerd naar binnen */
+.cp-v2-modal--visible {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+
+/* ==== INVOICE LAYOUT INSIDE MODAL ==== */
+
+.cp-v2-modal-inner {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    max-width: 640px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.cp-v2-modal-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cp-v2-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 2px;
+}
+
+.cp-v2-modal-meta {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.cp-v2-modal-close {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 999px;
+}
+
+.cp-v2-modal-close:hover {
+    background: #f3f4f6;
+}
+
+.cp-v2-modal-body {
+    padding: 16px 20px 12px;
+    overflow-y: auto;
+}
+
+/* high-level invoice sections */
+.cp-v2-invoice-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.cp-v2-invoice-title-block h3 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cp-v2-invoice-title-block p {
+    margin: 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.cp-v2-invoice-meta dl {
+    margin: 0;
+    font-size: 11px;
+}
+
+.cp-v2-invoice-meta dt {
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.cp-v2-invoice-meta dd {
+    margin: 0 0 4px;
+    color: #111827;
+}
+
+/* billed to section */
+.cp-v2-invoice-billto {
+    border-radius: 10px;
+    background: #f9fafb;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+}
+
+.cp-v2-invoice-billto-label {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 2px;
+}
+
+.cp-v2-invoice-billto-name {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.cp-v2-invoice-billto-text {
+    font-size: 12px;
+    color: #4b5563;
+}
+
+/* invoice lines */
+.cp-v2-invoice-lines {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.cp-v2-invoice-lines th,
+.cp-v2-invoice-lines td {
+    padding: 6px 4px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.cp-v2-invoice-lines th {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.cp-v2-invoice-lines td:last-child,
+.cp-v2-invoice-lines th:last-child {
+    text-align: right;
+}
+
+/* totals */
+.cp-v2-invoice-totals {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.cp-v2-invoice-totals-inner {
+    min-width: 180px;
+    font-size: 12px;
+}
+
+.cp-v2-invoice-totals-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.cp-v2-invoice-totals-row.is-total {
+    font-weight: 700;
+}
+
+.cp-v2-invoice-totals-label {
+    color: #6b7280;
+}
+
+.cp-v2-invoice-totals-value {
+    color: #111827;
+}
+
+/* footer: praktijk info + payment info */
+.cp-v2-invoice-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 10px;
+    margin-top: 4px;
+}
+
+.cp-v2-invoice-footer-block {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.cp-v2-invoice-footer-title {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.cp-v2-invoice-footer p {
+    margin: 0;
+}
+
+/* modal footer buttons */
+.cp-v2-modal-footer {
+    padding: 10px 20px 14px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* little tweak: "secondary" button style for print / cancel */
+.cp-v2-button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    font-size: 12px;
+    text-decoration: none;
+    color: #374151;
+    cursor: pointer;
+}
+
+/* ==== PRINT: only print the modal invoice ==== */
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+    .cp-v2-modal,
+    .cp-v2-modal * {
+        visibility: visible !important;
+    }
+    .cp-v2-modal-overlay {
+        display: none !important;
+    }
+    .cp-v2-modal {
+        position: static;
+        transform: none;
+        opacity: 1 !important;
+        box-shadow: none;
+        padding: 0;
+    }
+    .cp-v2-modal-inner {
+        max-height: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+}
+
+.cp-v2-button-secondary:hover {
+    background: #e5e7eb;
+}

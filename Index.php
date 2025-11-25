@@ -16,6 +16,7 @@ if (!isset($_GET['section'])) {
     <!-- koppel externe CSS -->
     <link rel="stylesheet" href="main.css?v=1">
 </head>
+<!-- include the JS for the modal -->
 <body>
 
 
