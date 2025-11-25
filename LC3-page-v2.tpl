@@ -1,12 +1,12 @@
 <?php
-// Bepaal welke "tab" actief is
+// Welke tab is actief?
 $section = isset($_GET['section']) ? $_GET['section'] : 'overzicht';
 $validSections = array('overzicht', 'statistiek', 'documenten', 'documenten_upload', 'dossier');
 if (!in_array($section, $validSections)) {
     $section = 'overzicht';
 }
 
-// Dummy data – later vervangen door echte data uit het systeem
+// Dummy client data
 $client = array(
     'praktijk_naam' => 'Test Praktijk',
     'praktijk_url'  => 'www.testpraktijk.nl',
@@ -20,9 +20,9 @@ $client = array(
 
 // Dummy afspraken / vragenlijsten / facturen
 $upcomingAppointments = array(
-    array('date' => '20/11/2025', 'type' => 'Beeldbellen', 'time' => '13:00–13:30', 'icon' => '📹'),
-    array('date' => '15/11/2025', 'type' => 'Behandeling', 'time' => '13:00–13:30', 'icon' => '📅'),
-    array('date' => 'Morgen',      'type' => 'Intake',      'time' => '14:00–14:45', 'icon' => '🗣️'),
+    array('date' => '20/11/2025', 'type' => 'Beeldbellen', 'time' => '13:00–13:30'),
+    array('date' => '15/11/2025', 'type' => 'Behandeling', 'time' => '13:00–13:30'),
+    array('date' => 'Morgen',      'type' => 'Intake',      'time' => '14:00–14:45'),
 );
 
 $todoQuestionnaires = array(
@@ -33,8 +33,8 @@ $todoQuestionnaires = array(
 
 $openInvoices = array(
     array('nr' => 13, 'date' => '21/09/2025', 'total' => '360.00', 'due' => '360.00'),
-    array('nr' => 13, 'date' => '21/09/2025', 'total' => '360.00', 'due' => '360.00'),
-    array('nr' => 13, 'date' => '21/09/2025', 'total' => '360.00', 'due' => '360.00'),
+    array('nr' => 14, 'date' => '21/09/2025', 'total' => '360.00', 'due' => '360.00'),
+    array('nr' => 15, 'date' => '21/09/2025', 'total' => '360.00', 'due' => '360.00'),
 );
 
 $historyAppointments = array(
@@ -47,9 +47,7 @@ $historyAppointments = array(
 );
 ?>
 
-
 <style>
-    /* Heel basic layout-styles – later vervang je dit door echte CSS */
     .cp-v2-root {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
         background: #f5f7fb;
@@ -164,17 +162,10 @@ $historyAppointments = array(
         font-size: 13px;
         border: 1px solid #e5e7eb;
     }
-    .cp-v2-appointment-date {
-        font-weight: 600;
-        margin-bottom: 2px;
-    }
-    .cp-v2-appointment-type {
-        color: #111827;
-    }
-    .cp-v2-appointment-time {
-        color: #4b5563;
-        font-size: 12px;
-    }
+    .cp-v2-appointment-date { font-weight: 600; margin-bottom: 2px; }
+    .cp-v2-appointment-type { color: #111827; }
+    .cp-v2-appointment-time { color: #4b5563; font-size: 12px; }
+
     .cp-v2-table {
         width: 100%;
         border-collapse: collapse;
@@ -202,12 +193,8 @@ $historyAppointments = array(
         background: #f97373;
         color: #ffffff;
     }
-    .cp-v2-right-section {
-        margin-bottom: 16px;
-    }
-    .cp-v2-timeline {
-        font-size: 12px;
-    }
+    .cp-v2-right-section { margin-bottom: 16px; }
+    .cp-v2-timeline { font-size: 12px; }
     .cp-v2-timeline-label {
         font-weight: 600;
         margin-top: 8px;
@@ -220,119 +207,97 @@ $historyAppointments = array(
 </style>
 
 <div class="cp-v2-root">
-
     <div class="cp-v2-layout">
 
-        <!-- =========================
-             LINKER SIDEBAR
-             ========================= -->
+        <!-- LEFT SIDEBAR -->
         <aside class="cp-v2-left">
             <div class="cp-v2-card">
                 <div class="cp-v2-section-title">
-                    <?php= htmlspecialchars($client['praktijk_naam']) ?>
+                    <?= htmlspecialchars($client['praktijk_naam']) ?>
                 </div>
                 <div style="font-size:12px;color:#6b7280;">
-                    <?php= htmlspecialchars($client['praktijk_url']) ?>
+                    <?= htmlspecialchars($client['praktijk_url']) ?>
                 </div>
 
                 <div class="cp-v2-small-title" style="margin-top:16px;">Mijn gegevens</div>
                 <dl class="cp-v2-detail-list">
                     <dt>Naam:</dt>
-                    <dd><?php= htmlspecialchars($client['naam']) ?></dd>
+                    <dd><?= htmlspecialchars($client['naam']) ?></dd>
 
                     <dt>Adresgegevens:</dt>
-                    <dd><?php= nl2br(htmlspecialchars($client['adres'])) ?></dd>
+                    <dd><?= nl2br(htmlspecialchars($client['adres'])) ?></dd>
 
                     <dt>Plaats:</dt>
-                    <dd><?php= htmlspecialchars($client['plaats']) ?></dd>
+                    <dd><?= htmlspecialchars($client['plaats']) ?></dd>
 
                     <dt>Telefoonnummer:</dt>
-                    <dd><?php= htmlspecialchars($client['telefoon']) ?></dd>
+                    <dd><?= htmlspecialchars($client['telefoon']) ?></dd>
 
                     <dt>Mobiele nummer:</dt>
-                    <dd><?php= htmlspecialchars($client['mobiel']) ?></dd>
+                    <dd><?= htmlspecialchars($client['mobiel']) ?></dd>
 
                     <dt>Email:</dt>
-                    <dd><?php= htmlspecialchars($client['email']) ?></dd>
+                    <dd><?= htmlspecialchars($client['email']) ?></dd>
                 </dl>
             </div>
 
             <nav class="cp-v2-side-menu">
-                <a href="?cp_v2=1&section=overzicht" class="<?php= $section=='overzicht'?'cp-active':'' ?>">
+                <a href="?section=overzicht" class="<?= $section=='overzicht'?'cp-active':'' ?>">
                     Wijzig profiel
                 </a>
-                <a href="?cp_v2=1&section=overzicht">
+                <a href="?section=overzicht">
                     Wijzig wachtwoord
                 </a>
-                <a href="?cp_v2=1&section=documenten" class="<?php= $section=='documenten'?'cp-active':'' ?>">
+                <a href="?section=documenten" class="<?= $section=='documenten' || $section=='documenten_upload' ? 'cp-active' : '' ?>">
                     Downloads / Documenten
                 </a>
-                <a href="?cp_v2=1&section=overzicht">
+                <a href="?section=overzicht">
                     Bel me terug
                 </a>
-                <a href="?cp_v2=1&section=overzicht">
+                <a href="?section=overzicht">
                     Stel een vraag
                 </a>
             </nav>
         </aside>
 
-        <!-- =========================
-             MIDDENKOLOM
-             ========================= -->
+        <!-- MAIN COLUMN -->
         <main class="cp-v2-main">
-            <!-- Top tabs -->
             <nav class="cp-v2-tabs">
-                <a href="?cp_v2=1&section=overzicht"
-                   class="cp-v2-tab <?php= $section=='overzicht'?'cp-v2-tab--active':'' ?>">
-                    Overzicht
-                </a>
-                <a href="?cp_v2=1&section=statistiek"
-                   class="cp-v2-tab <?php= $section=='statistiek'?'cp-v2-tab--active':'' ?>">
-                    Statistiek
-                </a>
-                <a href="?cp_v2=1&section=documenten"
-                   class="cp-v2-tab <?php= $section=='documenten'?'cp-v2-tab--active':'' ?>">
-                    Documenten
-                </a>
-                <a href="?cp_v2=1&section=dossier"
-                   class="cp-v2-tab <?php= $section=='dossier'?'cp-v2-tab--active':'' ?>">
-                    Dossier
-                </a>
+                <a href="?section=overzicht" class="cp-v2-tab <?= $section=='overzicht'?'cp-v2-tab--active':'' ?>">Overzicht</a>
+                <a href="?section=statistiek" class="cp-v2-tab <?= $section=='statistiek'?'cp-v2-tab--active':'' ?>">Statistiek</a>
+                <a href="?section=documenten" class="cp-v2-tab <?= $section=='documenten' || $section=='documenten_upload'?'cp-v2-tab--active':'' ?>">Documenten</a>
+                <a href="?section=dossier" class="cp-v2-tab <?= $section=='dossier'?'cp-v2-tab--active':'' ?>">Dossier</a>
             </nav>
 
             <div class="cp-v2-card">
                 <h1 class="cp-v2-page-title">
-                    Welkom <?php= htmlspecialchars($client['naam']) ?>
+                    Welkom <?= htmlspecialchars($client['naam']) ?>
                 </h1>
 
-                <?php if ($section == 'overzicht'): ?>
+                <?php if ($section === 'overzicht'): ?>
 
-                    <!-- KOMENDE AFSPRAKEN -->
                     <div>
                         <div class="cp-v2-section-title">Komende afspraken</div>
-                        <a href="#"
-                           class="cp-v2-button-primary"
-                           style="margin-top:4px;margin-bottom:8px;">
+                        <a href="#" class="cp-v2-button-primary" style="margin-top:4px;margin-bottom:8px;">
                             + Maak een nieuwe afspraak
                         </a>
                         <div class="cp-v2-appointments-row">
                             <?php foreach ($upcomingAppointments as $afs): ?>
                                 <article class="cp-v2-appointment-tile">
                                     <div class="cp-v2-appointment-date">
-                                        <?php= htmlspecialchars($afs['date']) ?>
+                                        <?= htmlspecialchars($afs['date']) ?>
                                     </div>
                                     <div class="cp-v2-appointment-type">
-                                        <?php= htmlspecialchars($afs['type']) ?>
+                                        <?= htmlspecialchars($afs['type']) ?>
                                     </div>
                                     <div class="cp-v2-appointment-time">
-                                        <?php= htmlspecialchars($afs['time']) ?>
+                                        <?= htmlspecialchars($afs['time']) ?>
                                     </div>
                                 </article>
                             <?php endforeach; ?>
                         </div>
                     </div>
 
-                    <!-- TE DOEN -->
                     <div style="margin-top:24px;">
                         <div class="cp-v2-section-title">Te doen</div>
 
@@ -348,8 +313,8 @@ $historyAppointments = array(
                             <tbody>
                             <?php foreach ($todoQuestionnaires as $q): ?>
                                 <tr>
-                                    <td><?php= htmlspecialchars($q['titel']) ?></td>
-                                    <td><?php= htmlspecialchars($q['datum']) ?></td>
+                                    <td><?= htmlspecialchars($q['titel']) ?></td>
+                                    <td><?= htmlspecialchars($q['datum']) ?></td>
                                     <td>
                                         <a href="#" class="cp-v2-chip-button">
                                             Vragenlijst openen
@@ -374,10 +339,10 @@ $historyAppointments = array(
                             <tbody>
                             <?php foreach ($openInvoices as $inv): ?>
                                 <tr>
-                                    <td><?php= (int)$inv['nr'] ?></td>
-                                    <td><?php= htmlspecialchars($inv['date']) ?></td>
-                                    <td><?php= htmlspecialchars($inv['total']) ?></td>
-                                    <td><?php= htmlspecialchars($inv['due']) ?></td>
+                                    <td><?= (int)$inv['nr'] ?></td>
+                                    <td><?= htmlspecialchars($inv['date']) ?></td>
+                                    <td><?= htmlspecialchars($inv['total']) ?></td>
+                                    <td><?= htmlspecialchars($inv['due']) ?></td>
                                     <td>
                                         <a href="#" class="cp-v2-chip-button cp-v2-chip-button--accent">
                                             Factuur betalen
@@ -389,25 +354,20 @@ $historyAppointments = array(
                         </table>
                     </div>
 
-                <?php elseif ($section == 'statistiek'): ?>
+                <?php elseif ($section === 'statistiek'): ?>
 
-                    <!-- Placeholder voor STATISTIEK -->
                     <div>
                         <div class="cp-v2-section-title">Mijn behandeltraject</div>
                         <p style="font-size:13px;color:#6b7280;">
-                            Hier komen je grafieken en statistieken (pie charts, bar charts, etc.).
-                            Voor nu is dit een placeholder zodat de layout klopt.
+                            Hier komen straks de grafieken en statistieken (pie charts, bar charts, etc.).
                         </p>
                     </div>
 
-                <?php elseif ($section == 'documenten'): ?>
+                <?php elseif ($section === 'documenten'): ?>
 
-                    <!-- DOCUMENTEN OVERZICHT -->
                     <div>
                         <div class="cp-v2-section-title">Mijn documenten</div>
-                        <a href="?cp_v2=1&section=documenten_upload"
-                           class="cp-v2-button-primary"
-                           style="margin-top:4px;margin-bottom:8px;">
+                        <a href="?section=documenten_upload" class="cp-v2-button-primary" style="margin-top:4px;margin-bottom:8px;">
                             + Upload een document
                         </a>
 
@@ -425,29 +385,24 @@ $historyAppointments = array(
                                 <td>Document 1</td>
                                 <td>20/09/2024</td>
                                 <td>Lorem ipsum</td>
-                                <td>
-                                    <a href="#" class="cp-v2-chip-button">Download</a>
-                                </td>
+                                <td><a href="#" class="cp-v2-chip-button">Download</a></td>
                             </tr>
                             <tr>
                                 <td>Document 2</td>
                                 <td>20/09/2024</td>
                                 <td>Lorem ipsum</td>
-                                <td>
-                                    <a href="#" class="cp-v2-chip-button">Download</a>
-                                </td>
+                                <td><a href="#" class="cp-v2-chip-button">Download</a></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
 
-                <?php elseif ($section == 'documenten_upload'): ?>
+                <?php elseif ($section === 'documenten_upload'): ?>
 
-                    <!-- DOCUMENT UPLOAD -->
                     <div>
                         <div class="cp-v2-section-title">Upload een document</div>
                         <p style="font-size:13px;color:#6b7280;margin-bottom:12px;">
-                            Hier komt later de echte uploadcomponent met drag & drop / voortgangsbalk.
+                            Hier komt later de echte uploadcomponent met drag &amp; drop / voortgangsbalk.
                         </p>
                         <div class="cp-v2-card" style="border:2px dashed #d1d5db;text-align:center;">
                             Klik om een document te uploaden (placeholder)
@@ -461,7 +416,6 @@ $historyAppointments = array(
 
                 <?php else: /* dossier */ ?>
 
-                    <!-- DOSSIER PLACEHOLDER -->
                     <div>
                         <div class="cp-v2-section-title">Dossier</div>
                         <p style="font-size:13px;color:#6b7280;">
@@ -473,9 +427,7 @@ $historyAppointments = array(
             </div>
         </main>
 
-        <!-- =========================
-             RECHTER SIDEBAR
-             ========================= -->
+        <!-- RIGHT SIDEBAR -->
         <aside class="cp-v2-right">
             <div class="cp-v2-card cp-v2-right-section">
                 <div class="cp-v2-section-title">Vragenlijsten</div>
@@ -484,8 +436,8 @@ $historyAppointments = array(
                 </p>
                 <?php foreach ($todoQuestionnaires as $q): ?>
                     <div style="font-size:12px;margin-bottom:6px;">
-                        <strong><?php= htmlspecialchars($q['titel']) ?></strong><br>
-                        <span><?php= htmlspecialchars($q['datum']) ?></span>
+                        <strong><?= htmlspecialchars($q['titel']) ?></strong><br>
+                        <span><?= htmlspecialchars($q['datum']) ?></span>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -498,9 +450,9 @@ $historyAppointments = array(
                 <?php foreach ($openInvoices as $inv): ?>
                     <div style="font-size:12px;margin-bottom:6px;">
                         <a href="#" style="text-decoration:none;color:#2563eb;">
-                            #<?php= (int)$inv['nr'] ?>
+                            #<?= (int)$inv['nr'] ?>
                         </a>
-                        &nbsp;– <?php= htmlspecialchars($inv['date']) ?> – €<?php= htmlspecialchars($inv['total']) ?>
+                        &nbsp;– <?= htmlspecialchars($inv['date']) ?> – €<?= htmlspecialchars($inv['total']) ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -510,11 +462,11 @@ $historyAppointments = array(
                 <div class="cp-v2-timeline">
                     <?php foreach ($historyAppointments as $group): ?>
                         <div class="cp-v2-timeline-label">
-                            <?php= htmlspecialchars($group['label']) ?>
+                            <?= htmlspecialchars($group['label']) ?>
                         </div>
                         <?php foreach ($group['items'] as $item): ?>
                             <div class="cp-v2-timeline-item">
-                                <?php= htmlspecialchars($item['time']) ?> – <?php= htmlspecialchars($item['type']) ?>
+                                <?= htmlspecialchars($item['time']) ?> – <?= htmlspecialchars($item['type']) ?>
                             </div>
                         <?php endforeach; ?>
                     <?php endforeach; ?>
