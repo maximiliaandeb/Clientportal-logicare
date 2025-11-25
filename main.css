@@ -217,15 +217,46 @@
     justify-content: center;
     padding: 4px 10px;
     border-radius: 999px;
-    background: var(--cp-primary-softer); /* soft teal background */
+    background: var(--cp-primary-soft);   /* SAME as Wijzig profiel */
+    border: 1px solid rgba(89, 161, 167, 0.25); /* subtle edge */
     font-size: 11px;
     text-decoration: none;
     color: #1f2937;
     gap: 6px;
 }
+
+.cp-v2-chip-button:hover {
+    background: var(--cp-primary-strong);
+}
+
+
 .cp-v2-chip-button--accent {
     background: #f97373; /* je kunt deze eventueel ook naar een rood-tint laten als warning */
     color: #ffffff;
+}
+
+/* chip button with alert bubble */
+.cp-v2-chip-button--alert {
+    position: relative;
+    padding-right: 20px; /* space so text doesn't sit under the bubble */
+}
+
+/* the little red notification dot */
+.cp-v2-chip-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #f97373;           /* red bubble */
+    border: 2px solid #ffffff;     /* white ring so it stands out on the button */
+}
+
+/* optional: try to tint the icon towards the primary color
+   (works best if the SVGs are monochrome black) */
+.cp-v2-icon--primary {
+    filter: invert(56%) sepia(8%) saturate(980%) hue-rotate(136deg) brightness(94%) contrast(90%);
 }
 
 /* ROW ACTIONS */

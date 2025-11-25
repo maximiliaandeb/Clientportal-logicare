@@ -56,7 +56,7 @@ function cp_v2_appointment_icon($type) {
         return 'icons/user-sound-thin.svg';
     }
     if (strpos($typeLower, 'behandeling') !== false) {
-        return 'icons/calendar-dots-thin.svg';
+        return 'icons/calendar-dots-bold.svg';
     }
     return 'icons/info-thin.svg';
 }
@@ -80,7 +80,7 @@ function cp_v2_appointment_icon($type) {
                             </div>
                         </div>
                     </div>
-                    <img src="icons/dots-three-vertical-thin.svg" alt="Meer opties" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
+                    <img src="icons/dots-three-vertical-bold.svg" alt="Meer opties" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
                 </div>
 
                 <div style="display:flex;align-items:center;gap:6px;margin-top:8px;margin-bottom:4px;font-size:13px;font-weight:600;color:#111827;">
@@ -217,7 +217,7 @@ function cp_v2_appointment_icon($type) {
                                                 Vragenlijst openen
                                             </a>
                                             <button class="cp-v2-dot-menu" type="button">
-                                                <img src="icons/dots-three-vertical-thin.svg" alt="Meer opties" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
+                                                <img src="icons/dots-three-vertical-bold.svg" alt="Meer opties" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
                                             </button>
                                         </div>
                                     </td>
@@ -246,15 +246,17 @@ function cp_v2_appointment_icon($type) {
                                     <td><?= htmlspecialchars($inv['due']) ?></td>
                                     <td>
                                         <div class="cp-v2-row-actions">
-                                            <span class="cp-v2-status-pill">
-                                                <img src="icons/credit-card-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
-                                            </span>
-                                            <a href="#" class="cp-v2-chip-button cp-v2-chip-button--accent">
-                                                <img src="icons/credit-card-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                            <a href="#" class="cp-v2-chip-button cp-v2-chip-button--alert">
+                                                <span class="cp-v2-chip-badge"></span>
+                                                <img src="icons/credit-card-thin.svg"
+                                                    alt=""
+                                                    class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--primary" />
                                                 Factuur betalen
                                             </a>
                                             <button class="cp-v2-dot-menu" type="button">
-                                                <img src="icons/dots-three-vertical-thin.svg" alt="Meer opties" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
+                                                <img src="icons/dots-three-vertical-thin.svg"
+                                                    alt="Meer opties"
+                                                    class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--muted" />
                                             </button>
                                         </div>
                                     </td>
