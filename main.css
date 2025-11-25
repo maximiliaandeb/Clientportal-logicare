@@ -383,3 +383,140 @@
     top: 18px;
     right: 20px;
 }
+/* sidebar FACTUREN subtabs */
+.cp-v2-subtabs {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    margin-top: 4px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 2px;
+}
+
+.cp-v2-subtab {
+    padding: 4px 0 5px;
+    margin-bottom: -1px;
+    text-decoration: none;
+    color: #4b5563;
+    border-bottom: 2px solid transparent;
+}
+
+.cp-v2-subtab--active {
+    color: var(--cp-primary);                /* green text */
+    font-weight: 600;
+    border-bottom-color: var(--cp-primary);  /* green underline */
+}
+
+/* sidebar invoice list */
+.cp-v2-invoice-list {
+    margin-top: 4px;
+}
+
+.cp-v2-invoice-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.cp-v2-invoice-row:last-child {
+    border-bottom: none;
+}
+
+.cp-v2-invoice-main {
+    min-width: 55px;
+}
+
+.cp-v2-invoice-number {
+    display: block;
+    font-weight: 600;
+    color: var(--cp-primary);
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.cp-v2-invoice-date {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+.cp-v2-invoice-amounts {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.cp-v2-invoice-amount-block {
+    min-width: 70px;
+}
+
+.cp-v2-invoice-label {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.cp-v2-invoice-value {
+    font-size: 12px;
+    color: #111827;
+}
+
+.cp-v2-invoice-status {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* STATUS PILLS (betaald / openstaand) */
+.cp-v2-status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;                   /* smaller circle */
+    height: 18px;
+    border-radius: 999px;
+    background: #eef5f5;           /* neutral light background */
+}
+
+/* betaalde factuur: groene cirkel met witte check */
+.cp-v2-status-pill--ok {
+    background: #75b870; /* solid green circle */
+}
+
+/* openstaande factuur: neutrale cirkel + rood bolletje */
+.cp-v2-status-pill--alert {
+    position: relative;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+}
+
+/* rood notificatie-badge rechtsboven */
+.cp-v2-status-pill-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: #f97373;
+    border: 2px solid #ffffff;
+}
+
+/* icon size inside status pill */
+.cp-v2-icon--status {
+    width: 11px;
+    height: 11px;
+}
+
+/* maak de check wit in de groene cirkel */
+.cp-v2-status-pill--ok .cp-v2-icon--status {
+    filter: invert(100%) brightness(250%);
+}
+
+/* tint de creditcard in huis-groen */
+.cp-v2-status-pill--alert .cp-v2-icon--status {
+    filter: invert(54%) sepia(7%) saturate(1045%) hue-rotate(136deg)
+            brightness(93%) contrast(91%);
+}

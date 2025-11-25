@@ -20,9 +20,9 @@ $client = array(
 
 // Dummy afspraken / vragenlijsten / facturen
 $upcomingAppointments = array(
-    array('date' => '20/11/2025', 'type' => 'Beeldbellen', 'time' => '13:00–13:30'),
-    array('date' => '15/11/2025', 'type' => 'Behandeling', 'time' => '13:00–13:30'),
-    array('date' => 'Morgen',      'type' => 'Intake',      'time' => '14:00–14:45'),
+    array('date' => '20/11/2025', 'type' => 'Beeldbellen',  'time' => '13:00–13:30'),
+    array('date' => '15/11/2025', 'type' => 'Behandeling',  'time' => '13:00–13:30'),
+    array('date' => 'Morgen',     'type' => 'Intake',       'time' => '14:00–14:45'),
 );
 
 $todoQuestionnaires = array(
@@ -31,11 +31,38 @@ $todoQuestionnaires = array(
     array('titel' => 'Onderzoek', 'datum' => '20/09/2024', 'status' => 'Te doen'),
 );
 
+/**
+ * FACTUREN DATA
+ * - 13: betaald (due 0)
+ * - 14: openstaand (due 360)
+ * - 15: betaald (due 0)
+ */
 $openInvoices = array(
-    array('nr' => 13, 'date' => '21/09/2025', 'total' => '360.00', 'due' => '360.00'),
-    array('nr' => 14, 'date' => '21/09/2025', 'total' => '360.00', 'due' => '360.00'),
-    array('nr' => 15, 'date' => '21/09/2025', 'total' => '360.00', 'due' => '360.00'),
+    array('nr' => 13, 'date' => '21/09/2025', 'total' => '2500.00', 'due' => '0.00'),
+    array('nr' => 14, 'date' => '21/09/2025', 'total' => '360.00',  'due' => '360.00'),
+    array('nr' => 15, 'date' => '21/09/2025', 'total' => '1400.00', 'due' => '0.00'),
 );
+
+// Welke facturen-tab is actief in de sidebar?
+$invoiceTab = isset($_GET['ftab']) ? $_GET['ftab'] : 'alle';
+$validInvoiceTabs = array('alle', 'openstaand', 'voldaan');
+if (!in_array($invoiceTab, $validInvoiceTabs)) {
+    $invoiceTab = 'alle';
+}
+
+// Filter facturen op basis van tab (alle / openstaand / voldaan)
+$filteredInvoices = array_filter($openInvoices, function ($inv) use ($invoiceTab) {
+    $due = isset($inv['due']) ? (float) str_replace(',', '.', $inv['due']) : 0;
+
+    if ($invoiceTab === 'openstaand') {
+        return $due > 0.0001;
+    }
+    if ($invoiceTab === 'voldaan') {
+        return $due <= 0.0001;
+    }
+    // 'alle'
+    return true;
+});
 
 $historyAppointments = array(
     array('label' => 'Gister', 'items' => array(
@@ -47,7 +74,7 @@ $historyAppointments = array(
     array('label' => '21/09/2025', 'items' => array(
         array('date' => '21/09/2025', 'time' => '14:00–15:00', 'type' => 'Intakegesprek'),
     )),
-        array('label' => '21/09/2025', 'items' => array(
+    array('label' => '21/09/2025', 'items' => array(
         array('date' => 'Gister',     'time' => '10:00–12:00', 'type' => 'Beeldbellen'),
     )),
 );
@@ -67,6 +94,7 @@ function cp_v2_appointment_icon($type) {
     return 'icons/info-thin.svg';
 }
 ?>
+
 
 <div class="cp-v2-root">
     <div class="cp-v2-layout">
@@ -349,7 +377,7 @@ function cp_v2_appointment_icon($type) {
 
                         <div style="margin-top:16px;display:flex;gap:8px;">
                             <a href="#" class="cp-v2-button-primary">
-                                <img src="icons/check-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                                <img src="icons/check-bold.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
                                 Opslaan
                             </a>
                             <a href="#" class="cp-v2-chip-button">
@@ -396,62 +424,122 @@ function cp_v2_appointment_icon($type) {
             </div>
 
             <div class="cp-v2-card cp-v2-right-section">
-                <div class="cp-v2-section-title">Facturen</div>
-                <p style="font-size:12px;color:#6b7280;margin-bottom:4px;">
-                    Tabs (Alle / Openstaand / Voldaan) komen hier later.
-                </p>
-                <?php foreach ($openInvoices as $inv): ?>
-                    <div style="font-size:12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                        <div>
-                            <a href="#" style="text-decoration:none;color:#2563eb;">
-                                #<?= (int)$inv['nr'] ?>
-                            </a>
-                            &nbsp;– <?= htmlspecialchars($inv['date']) ?> – €<?= htmlspecialchars($inv['total']) ?>
+    <div class="cp-v2-section-title">Facturen</div>
+
+    <?php $baseUrl = '?section=' . urlencode($section); ?>
+
+    <div class="cp-v2-subtabs">
+        <a href="<?= $baseUrl ?>&ftab=alle"
+           class="cp-v2-subtab <?= $invoiceTab === 'alle' ? 'cp-v2-subtab--active' : '' ?>">
+            Alle
+        </a>
+        <a href="<?= $baseUrl ?>&ftab=openstaand"
+           class="cp-v2-subtab <?= $invoiceTab === 'openstaand' ? 'cp-v2-subtab--active' : '' ?>">
+            Openstaand
+        </a>
+        <a href="<?= $baseUrl ?>&ftab=voldaan"
+           class="cp-v2-subtab <?= $invoiceTab === 'voldaan' ? 'cp-v2-subtab--active' : '' ?>">
+            Voldaan
+        </a>
+    </div>
+
+    <?php if (empty($filteredInvoices)): ?>
+        <p style="font-size:12px;color:#6b7280;margin-top:6px;">
+            Er zijn geen facturen in deze categorie.
+        </p>
+    <?php else: ?>
+        <div class="cp-v2-invoice-list">
+            <?php foreach ($filteredInvoices as $inv): ?>
+                <?php $due = (float) str_replace(',', '.', $inv['due']); ?>
+                <div class="cp-v2-invoice-row">
+                    <div class="cp-v2-invoice-main">
+                        <a href="#"
+                           class="cp-v2-invoice-number">
+                            <?= (int) $inv['nr'] ?>
+                        </a>
+                        <div class="cp-v2-invoice-date">
+                            <?= htmlspecialchars($inv['date']) ?>
                         </div>
-                        <span class="cp-v2-status-pill">
-                            <img src="icons/credit-card-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
-                        </span>
                     </div>
-                <?php endforeach; ?>
-            </div>
+
+                    <div class="cp-v2-invoice-amounts">
+                        <div class="cp-v2-invoice-amount-block">
+                            <div class="cp-v2-invoice-label">Totaal</div>
+                            <div class="cp-v2-invoice-value">
+                                €<?= htmlspecialchars($inv['total']) ?>
+                            </div>
+                        </div>
+                        <div class="cp-v2-invoice-amount-block">
+                            <div class="cp-v2-invoice-label">Te betalen</div>
+                            <div class="cp-v2-invoice-value">
+                                €<?= htmlspecialchars($inv['due']) ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cp-v2-invoice-status">
+                        <?php if ($due > 0.0001): ?>
+                            <!-- openstaand: creditcard + rood bolletje -->
+                            <span class="cp-v2-status-pill cp-v2-status-pill--alert">
+                                <span class="cp-v2-status-pill-badge"></span>
+                                <img src="icons/credit-card-thin.svg"
+                                     alt=""
+                                     class="cp-v2-icon cp-v2-icon--status" />
+                            </span>
+                        <?php else: ?>
+                            <!-- voldaan: groene check -->
+                            <span class="cp-v2-status-pill cp-v2-status-pill--ok">
+                                <img src="icons/check-bold.svg"
+                                     alt=""
+                                     class="cp-v2-icon cp-v2-icon--status" />
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+
 
             <div class="cp-v2-card cp-v2-right-section">
-    <div class="cp-v2-section-title">Afspraakshistorie</div>
+                <div class="cp-v2-section-title">Afspraakshistorie</div>
 
-    <div class="cp-v2-timeline">
-        <?php foreach ($historyAppointments as $group): ?>
-            <div class="cp-v2-timeline-row">
-                <div class="cp-v2-timeline-axis">
-                    <div class="cp-v2-timeline-dot"></div>
-                </div>
-
-                <div class="cp-v2-timeline-content">
-                    <div class="cp-v2-timeline-label">
-                        <?= htmlspecialchars($group['label']) ?>
-                    </div>
-
-                    <?php foreach ($group['items'] as $item): ?>
-                        <div class="cp-v2-timeline-item">
-                            <div class="cp-v2-timeline-item-icon">
-                                <img src="<?= cp_v2_appointment_icon($item['type']) ?>"
-                                     alt=""
-                                     class="cp-v2-icon cp-v2-icon--tiny" />
+                <div class="cp-v2-timeline">
+                    <?php foreach ($historyAppointments as $group): ?>
+                        <div class="cp-v2-timeline-row">
+                            <div class="cp-v2-timeline-axis">
+                                <div class="cp-v2-timeline-dot"></div>
                             </div>
-                            <div class="cp-v2-timeline-item-text">
-                                <span class="cp-v2-timeline-time">
-                                    <?= htmlspecialchars($item['time']) ?>
-                                </span>
-                                <span class="cp-v2-timeline-type">
-                                    <?= htmlspecialchars($item['type']) ?>
-                                </span>
+
+                            <div class="cp-v2-timeline-content">
+                                <div class="cp-v2-timeline-label">
+                                    <?= htmlspecialchars($group['label']) ?>
+                                </div>
+
+                                <?php foreach ($group['items'] as $item): ?>
+                                    <div class="cp-v2-timeline-item">
+                                        <div class="cp-v2-timeline-item-icon">
+                                            <img src="<?= cp_v2_appointment_icon($item['type']) ?>"
+                                                alt=""
+                                                class="cp-v2-icon cp-v2-icon--tiny" />
+                                        </div>
+                                        <div class="cp-v2-timeline-item-text">
+                                            <span class="cp-v2-timeline-time">
+                                                <?= htmlspecialchars($item['time']) ?>
+                                            </span>
+                                            <span class="cp-v2-timeline-type">
+                                                <?= htmlspecialchars($item['type']) ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
-        <?php endforeach; ?>
-    </div>
-</div>
 
 
         </aside>
