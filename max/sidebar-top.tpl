@@ -4,10 +4,10 @@
     </div>
 
     <div class="client-card">
-        <p><strong>{CLIENT_NAME}</strong></p>
-        <p>{CLIENT_BIRTHDATE}</p>
-        <p>{CLIENT_ADDRESS_LINE1}</p>
-        <p>{CLIENT_ADDRESS_LINE2}</p>
+        <p><strong><?= htmlspecialchars($client['naam']) ?></strong></p>
+        <p><?= isset($client['birthdate']) ? htmlspecialchars($client['birthdate']) : '' ?></p>
+        <p><?= isset($client['address_line1']) ? htmlspecialchars($client['address_line1']) : '' ?></p>
+        <p><?= isset($client['address_line2']) ? htmlspecialchars($client['address_line2']) : '' ?></p>
     </div>
 
     <div class="menu">

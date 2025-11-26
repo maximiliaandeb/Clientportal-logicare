@@ -17,7 +17,7 @@ $client = array(
     'mobiel'        => '+31642032652',
     'email'         => 'Yamal.elshot@hotmail.com',
 );
-    
+
 // Dummy afspraken / vragenlijsten / facturen
 $upcomingAppointments = array(
     array('date' => '20/11/2025', 'type' => 'Beeldbellen',  'time' => '13:00–13:30'),

@@ -1,4 +1,5 @@
- <div class="cp-v2-section-title">Facturen</div>
+ <div class="cp-v2-card cp-v2-right-section">
+     <div class="cp-v2-section-title">Facturen</div>
 
     <?php $baseUrl = '?section=' . urlencode($section); ?>
 
@@ -62,7 +63,7 @@
                             <button type="button"
                                     class="cp-v2-status-pill cp-v2-status-pill--alert cp-v2-invoice-open">
                                 <span class="cp-v2-status-pill-badge"></span>
-                                <img src="icons/credit-card-thin.svg"
+                                <img src="../icons/credit-card-thin.svg"
                                     alt=""
                                     class="cp-v2-icon cp-v2-icon--status" />
                             </button>
@@ -70,7 +71,7 @@
                             <!-- voldaan: groene check -->
                             <button type="button"
                                     class="cp-v2-status-pill cp-v2-status-pill--ok cp-v2-invoice-open">
-                                <img src="icons/check-bold.svg"
+                                <img src="../icons/check-bold.svg"
                                     alt=""
                                     class="cp-v2-icon cp-v2-icon--status" />
                             </button>
