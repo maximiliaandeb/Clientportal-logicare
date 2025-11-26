@@ -241,24 +241,12 @@
     filter: invert(56%) sepia(8%) saturate(980%) hue-rotate(136deg) brightness(94%) contrast(90%);
 }
 
-/* tint the icon in the active side-menu item to match the active text color (primary) */
-.cp-v2-side-menu a.cp-active .cp-v2-icon {
-    /* filter tuned to the primary color #59a1a7 */
-    filter: invert(56%) sepia(8%) saturate(980%) hue-rotate(136deg) brightness(94%) contrast(90%);
-}
-
 /* Dark hover/focus: whole bar turns dark and text/icons become white */
 .cp-v2-side-menu a:not(.cp-active):hover,
 .cp-v2-side-menu a:not(.cp-active):focus {
     /* updated hover to a medium gray */
     background: #A9A9A9;
     color: var(--cp-text-strong);
-}
-
-/* icons in the left menu invert to white when the item is dark */
-.cp-v2-side-menu a.cp-active .cp-v2-icon {
-    /* only invert icons for the active item (keep hover icons unchanged for light hover) */
-    filter: invert(100%) brightness(1);
 }
 
 /* icons in the left menu invert to white when the item is dark */
