@@ -15,6 +15,8 @@
     --cp-text-main: #1f2937;   /* dark grey (Tailwind gray-800 vibes) */
     --cp-text-strong: #111827; /* extra strong for rare emphasis */
     --cp-text-muted: #6b7280;  /* subtitles, labels */
+    /* light gray used for hover states on tabs */
+    --cp-tab-hover-bg: #CDCDCD;
 }
 
 
@@ -141,12 +143,32 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    cursor: pointer;
+    transition: background 160ms ease, color 120ms ease;
 }
 .cp-v2-tab--active {
     background: var(--cp-primary-soft);
     color: #1f2937;
     font-weight: 600;
     border-bottom: 2px solid var(--cp-primary);
+}
+
+/* Tabs Hover/Focus: light gray background and stronger text */
+.cp-v2-tab:not(.cp-v2-tab--active):hover,
+.cp-v2-tab:not(.cp-v2-tab--active):focus {
+    background: var(--cp-tab-hover-bg);
+    color: var(--cp-text-strong);
+}
+
+/* Invert icons that appear in tabs for readability on hover */
+.cp-v2-tab:not(.cp-v2-tab--active):hover .cp-v2-icon,
+.cp-v2-tab:not(.cp-v2-tab--active):focus .cp-v2-icon {
+    filter: invert(100%) brightness(1);
+}
+
+/* Make active tab icons white-ish to match active background */
+.cp-v2-tab--active .cp-v2-icon {
+    filter: invert(100%) brightness(1);
 }
 
 /* TITLES / TEXT */
