@@ -25,6 +25,10 @@ $upcomingAppointments = array(
     array('date' => 'Morgen',     'type' => 'Intake',       'time' => '14:00–14:45'),
 );
 
+/* ===========================
+ * VRAGENLIJSTEN (SIDEBAR + TODO)
+ * =========================== */
+
 // Dummy vragenlijsten (sidebar)
 $allQuestionnaires = array(
     array('titel' => 'Onderzoek', 'datum' => '20/09/2024', 'status' => 'todo'),
@@ -32,7 +36,7 @@ $allQuestionnaires = array(
     array('titel' => 'Onderzoek', 'datum' => '20/09/2024', 'status' => 'voldaan'),
 );
 
-// Voor de "Te doen" tabel in het midden (blijft gewoon To Do)
+// Voor de "Te doen" tabel in het midden
 $todoQuestionnaires = array_filter($allQuestionnaires, function ($q) {
     return $q['status'] === 'todo';
 });
@@ -56,6 +60,10 @@ $filteredQuestionnaires = array_filter($allQuestionnaires, function ($q) use ($q
 });
 
 
+/* ===========================
+ * FACTUREN (SIDEBAR + TODO)
+ * =========================== */
+
 /**
  * FACTUREN DATA
  * - 13: betaald (due 0)
@@ -68,6 +76,12 @@ $openInvoices = array(
     array('nr' => 15, 'date' => '21/09/2025', 'total' => '1400.00', 'due' => '0.00'),
 );
 
+// Alleen facturen die nog iets open hebben (voor de "Te doen" tabel in het midden)
+$todoInvoices = array_filter($openInvoices, function ($inv) {
+    $due = isset($inv['due']) ? (float) str_replace(',', '.', $inv['due']) : 0;
+    return $due > 0.0001;
+});
+
 // Welke facturen-tab is actief in de sidebar?
 $invoiceTab = isset($_GET['ftab']) ? $_GET['ftab'] : 'alle';
 $validInvoiceTabs = array('alle', 'openstaand', 'voldaan');
@@ -75,7 +89,7 @@ if (!in_array($invoiceTab, $validInvoiceTabs)) {
     $invoiceTab = 'alle';
 }
 
-// Filter facturen op basis van tab (alle / openstaand / voldaan)
+// Filter facturen op basis van tab (alle / openstaand / voldaan) – voor de sidebar
 $filteredInvoices = array_filter($openInvoices, function ($inv) use ($invoiceTab) {
     $due = isset($inv['due']) ? (float) str_replace(',', '.', $inv['due']) : 0;
 
@@ -88,6 +102,11 @@ $filteredInvoices = array_filter($openInvoices, function ($inv) use ($invoiceTab
     // 'alle'
     return true;
 });
+
+
+/* ===========================
+ * AFSPRAAKHISTORIE
+ * =========================== */
 
 $historyAppointments = array(
     array('label' => 'Gister', 'items' => array(
@@ -104,6 +123,39 @@ $historyAppointments = array(
     )),
 );
 
+
+/* ===========================
+ * NOTIFICATIONS (BELL DROPDOWN)
+ * =========================== */
+
+$notifications = array();
+
+// Openstaande facturen → notificatie
+foreach ($todoInvoices as $inv) {
+    $dueNum = isset($inv['due']) ? (float) str_replace(',', '.', $inv['due']) : 0;
+    $notifications[] = array(
+        'type'  => 'invoice',
+        'title' => 'Openstaande factuur #' . $inv['nr'],
+        'meta'  => 'Te betalen: €' . number_format($dueNum, 2, ',', '.'),
+        'icon'  => 'icons/credit-card-thin.svg',
+    );
+}
+
+// Te doen vragenlijsten → notificatie
+foreach ($todoQuestionnaires as $q) {
+    $notifications[] = array(
+        'type'  => 'questionnaire',
+        'title' => 'Vragenlijst invullen: ' . $q['titel'],
+        'meta'  => $q['datum'],
+        'icon'  => 'icons/clipboard-text-thin.svg',
+    );
+}
+
+// Later kun je hier "nieuwe documenten" toevoegen aan $notifications
+
+$hasNotifications = count($notifications) > 0;
+
+
 // Kleine helper om een icoon bij een afspraaktype te kiezen
 function cp_v2_appointment_icon($type) {
     $typeLower = mb_strtolower($type);
@@ -119,6 +171,7 @@ function cp_v2_appointment_icon($type) {
     return 'icons/info-thin.svg';
 }
 ?>
+
 
 
 <div class="cp-v2-root">
@@ -195,33 +248,83 @@ function cp_v2_appointment_icon($type) {
         <!-- MAIN COLUMN -->
         <main class="cp-v2-main">
             <nav class="cp-v2-tabs">
-                <a href="?section=overzicht" class="cp-v2-tab <?= $section=='overzicht'?'cp-v2-tab--active':'' ?>">
-                    <img src="icons/house-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
-                    Overzicht
-                </a>
-                <a href="?section=statistiek" class="cp-v2-tab <?= $section=='statistiek'?'cp-v2-tab--active':'' ?>">
-                    <img src="icons/gauge-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
-                    Statistiek
-                </a>
-                <a href="?section=documenten" class="cp-v2-tab <?= $section=='documenten' || $section=='documenten_upload'?'cp-v2-tab--active':'' ?>">
-                    <img src="icons/file-text-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
-                    Documenten
-                </a>
-                <a href="?section=dossier" class="cp-v2-tab <?= $section=='dossier'?'cp-v2-tab--active':'' ?>">
-                    <img src="icons/archive-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
-                    Dossier
-                </a>
-            </nav>
-
-            <div class="cp-v2-card">
-                <!-- notificatiebel -->
-                <div class="cp-v2-main-bell">
-                    <img src="icons/bell-thin.svg" alt="Meldingen" class="cp-v2-icon cp-v2-icon--tiny" />
+                <div class="cp-v2-tabs-left">
+                    <a href="?section=overzicht"
+                    class="cp-v2-tab <?= $section=='overzicht'?'cp-v2-tab--active':'' ?>">
+                        <img src="icons/house-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                        Overzicht
+                    </a>
+                    <a href="?section=statistiek"
+                    class="cp-v2-tab <?= $section=='statistiek'?'cp-v2-tab--active':'' ?>">
+                        <img src="icons/gauge-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                        Statistiek
+                    </a>
+                    <a href="?section=documenten"
+                    class="cp-v2-tab <?= ($section=='documenten' || $section=='documenten_upload')?'cp-v2-tab--active':'' ?>">
+                        <img src="icons/file-text-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                        Documenten
+                    </a>
+                    <a href="?section=dossier"
+                    class="cp-v2-tab <?= $section=='dossier'?'cp-v2-tab--active':'' ?>">
+                        <img src="icons/archive-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+                        Dossier
+                    </a>
                 </div>
 
+                <div class="cp-v2-tabs-right">
+                    <button class="cp-v2-main-bell"
+                            type="button"
+                            id="cp-main-notify-btn"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        <span class="cp-v2-main-bell-inner">
+                            <img src="icons/bell-thin.svg"
+                                alt="Meldingen"
+                                class="cp-v2-main-bell-icon" />
+                            <?php if ($hasNotifications): ?>
+                                <span class="cp-v2-notify-dot"></span>
+                            <?php endif; ?>
+                        </span>
+                    </button>
+
+                    <div class="cp-v2-notify-dropdown" id="cp-main-notify-dropdown">
+                        <div class="cp-v2-notify-header">Meldingen</div>
+
+                        <?php if (empty($notifications)): ?>
+                            <div class="cp-v2-notify-empty">
+                                Je hebt geen nieuwe meldingen.
+                            </div>
+                        <?php else: ?>
+                            <ul class="cp-v2-notify-list">
+                                <?php foreach ($notifications as $n): ?>
+                                    <li class="cp-v2-notify-item cp-v2-notify-item--<?= htmlspecialchars($n['type']) ?>">
+                                        <div class="cp-v2-notify-item-icon">
+                                            <img src="<?= htmlspecialchars($n['icon']) ?>"
+                                                alt=""
+                                                class="cp-v2-icon cp-v2-icon--tiny" />
+                                        </div>
+                                        <div class="cp-v2-notify-item-text">
+                                            <div class="cp-v2-notify-title">
+                                                <?= htmlspecialchars($n['title']) ?>
+                                            </div>
+                                            <div class="cp-v2-notify-meta">
+                                                <?= htmlspecialchars($n['meta']) ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </nav>
+
+
+            <div class="cp-v2-card">
                 <h1 class="cp-v2-page-title">
                     Welkom <?= htmlspecialchars($client['naam']) ?>
                 </h1>
+
 
                 <?php if ($section === 'overzicht'): ?>
 
@@ -297,7 +400,7 @@ function cp_v2_appointment_icon($type) {
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($openInvoices as $inv): ?>
+                            <?php foreach ($todoInvoices as $inv): ?>
                                 <tr>
                                     <td><?= (int)$inv['nr'] ?></td>
                                     <td><?= htmlspecialchars($inv['date']) ?></td>
@@ -477,7 +580,7 @@ function cp_v2_appointment_icon($type) {
                     <?php if ($q['status'] === 'voldaan'): ?>
                         <!-- Groen check-icoon -->
                         <span class="cp-v2-status-pill cp-v2-status-pill--ok">
-                            <img src="icons/check-circle-thin.svg"
+                            <img src="icons/check-bold.svg"
                                  alt=""
                                  class="cp-v2-icon cp-v2-icon--status" />
                         </span>
