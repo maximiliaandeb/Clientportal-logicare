@@ -1,7 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const overlay = document.querySelector('.cp-v2-modal-overlay');
+    let overlay = document.querySelector('.cp-v2-modal-overlay');
     const modals  = Array.from(document.querySelectorAll('.cp-v2-modal'));
-    if (!overlay) return;
+    // Ensure an overlay exists on the page. Some pages include it via templates,
+    // but if it's missing (e.g. this partial is rendered standalone) create one.
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'cp-v2-modal-overlay';
+        document.body.appendChild(overlay);
+    }
 
     const body = document.body;
 
@@ -96,6 +102,150 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             if (appointmentModal) openModal(appointmentModal);
+        });
+    });
+
+    /* ---------- openers for profile / quick-modals on left sidebar ---------- */
+    const profileModal = document.getElementById('cp-v2-profile-modal');
+    document.querySelectorAll('.js-open-profile-modal').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (profileModal) openModal(profileModal);
+        });
+    });
+
+    // simple save handler for the profile modal (placeholder - no server persistence)
+    if (profileModal) {
+        const profileForm = profileModal.querySelector('#cp-profile-form');
+        const profileSaveBtn = profileModal.querySelector('#cp-profile-save-btn');
+        if (profileSaveBtn) {
+            profileSaveBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                // Basic validation: require an email
+                const emailEl = profileForm.querySelector('input[name="email"]');
+                if (emailEl && !emailEl.value.trim()) {
+                    alert('Vul een geldig e-mailadres in');
+                    emailEl.focus();
+                    return;
+                }
+                // TODO: send data to server via fetch/XHR - currently just confirm
+                alert('Profiel opgeslagen (placeholder)');
+                closeModal();
+            });
+        }
+    }
+
+    // placeholders for other left-side quick-modals (if implemented later)
+    const passwordModal = document.getElementById('cp-v2-password-modal');
+    document.querySelectorAll('.js-open-password-modal').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (passwordModal) openModal(passwordModal);
+        });
+    });
+
+    // simple save handler for change-password modal (placeholder)
+    if (passwordModal) {
+        const pwForm = passwordModal.querySelector('#cp-password-form');
+        const pwSaveBtn = passwordModal.querySelector('#cp-password-save-btn');
+        if (pwSaveBtn) {
+            pwSaveBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const pw = pwForm.querySelector('input[name="password"]');
+                const pwc = pwForm.querySelector('input[name="password_confirm"]');
+                if (!pw || !pwc) return;
+                if (!pw.value.trim()) {
+                    alert('Vul een nieuw wachtwoord in');
+                    pw.focus();
+                    return;
+                }
+                if (pw.value !== pwc.value) {
+                    alert('Wachtwoorden komen niet overeen');
+                    pwc.focus();
+                    return;
+                }
+                // TODO: send POST to server. For now show placeholder confirmation
+                alert('Wachtwoord gewijzigd (placeholder)');
+                closeModal();
+            });
+        }
+    }
+
+    // simple handler for 'Stel een vraag' modal (placeholder)
+    if (typeof document !== 'undefined') {
+        const questionModalEl = document.getElementById('cp-v2-question-modal');
+        if (questionModalEl) {
+            const qForm = questionModalEl.querySelector('#cp-question-form');
+            const qSendBtn = questionModalEl.querySelector('#cp-question-send-btn');
+            if (qSendBtn) {
+                qSendBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const vraag = qForm.querySelector('textarea[name="vraag"]');
+                    const naam = qForm.querySelector('input[name="naam"]');
+                    const email = qForm.querySelector('input[name="email"]');
+                    if (!vraag || !vraag.value.trim()) {
+                        alert('Vul uw vraag in');
+                        vraag.focus();
+                        return;
+                    }
+                    if (!naam || !naam.value.trim()) {
+                        alert('Vul uw naam in');
+                        naam.focus();
+                        return;
+                    }
+                    if (!email || !email.value.trim()) {
+                        alert('Vul uw e-mailadres in');
+                        email.focus();
+                        return;
+                    }
+                    // TODO: POST to server endpoint; for now just confirm
+                    alert('Vraag verzonden (placeholder).');
+                    closeModal();
+                });
+            }
+        }
+    }
+
+    // simple handler for 'Bel me terug' modal (placeholder)
+    const callmeModalEl = document.getElementById('cp-v2-callme-modal');
+    if (callmeModalEl) {
+        const callForm = callmeModalEl.querySelector('#cp-callme-form');
+        const callSendBtn = callmeModalEl.querySelector('#cp-callme-send-btn');
+        if (callSendBtn) {
+            callSendBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const naam = callForm.querySelector('input[name="naam"]');
+                const telefoon = callForm.querySelector('input[name="telefoon"]');
+                if (!naam || !naam.value.trim()) {
+                    alert('Vul uw naam in');
+                    if (naam) naam.focus();
+                    return;
+                }
+                if (!telefoon || !telefoon.value.trim()) {
+                    alert('Vul uw telefoonnummer in');
+                    if (telefoon) telefoon.focus();
+                    return;
+                }
+                // TODO: POST to server endpoint; for now just confirm
+                alert('Verzoek ontvangen — we bellen u terug (placeholder).');
+                closeModal();
+            });
+        }
+    }
+
+    const callmeModal = document.getElementById('cp-v2-callme-modal');
+    document.querySelectorAll('.js-open-callme-modal').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (callmeModal) openModal(callmeModal);
+        });
+    });
+
+    const questionModal = document.getElementById('cp-v2-question-modal');
+    document.querySelectorAll('.js-open-question-modal').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (questionModal) openModal(questionModal);
         });
     });
 

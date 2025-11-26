@@ -42,11 +42,12 @@
     </div>
 
     <nav class="cp-v2-side-menu">
-        <a href="?section=overzicht" class="<?= $section=='overzicht'?'cp-active':'' ?>">
+        <!-- These left-side items open modals instead of navigating the main area -->
+        <a href="#" class="js-open-profile-modal">
             <img src="../icons/gear-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
             Wijzig profiel
         </a>
-        <a href="?section=overzicht">
+        <a href="#" class="js-open-password-modal">
             <img src="../icons/key-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
             Wijzig wachtwoord
         </a>
@@ -54,11 +55,11 @@
             <img src="../icons/download-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
             Downloads / Documenten
         </a>
-        <a href="?section=overzicht">
+        <a href="#" class="js-open-callme-modal">
             <img src="../icons/phone-call-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
             Bel me terug
         </a>
-        <a href="?section=overzicht">
+        <a href="#" class="js-open-question-modal">
             <img src="../icons/info-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
             Stel een vraag
         </a>

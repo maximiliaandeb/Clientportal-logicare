@@ -1018,6 +1018,75 @@ button.cp-v2-status-pill:focus-visible {
     overflow-y: auto;
 }
 
+/* Modal form / input styles (improves Wijzig profiel look) */
+.cp-v2-modal form {
+    width: 100%;
+}
+
+.cp-v2-modal .cp-v2-modal-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.cp-v2-modal-input,
+.cp-v2-modal textarea,
+.cp-v2-modal select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #e6ecef;
+    background: #ffffff;
+    font-size: 13px;
+    color: var(--cp-text-main);
+    box-sizing: border-box;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.cp-v2-modal-input:focus,
+.cp-v2-modal textarea:focus,
+.cp-v2-modal select:focus {
+    outline: none;
+    border-color: var(--cp-primary);
+    box-shadow: 0 6px 18px rgba(89,161,167,0.06), 0 0 0 3px rgba(89,161,167,0.06);
+}
+
+.cp-v2-modal .cp-v2-modal-form-row {
+    margin-bottom: 12px;
+}
+
+/* radio buttons grouping inside modal */
+.cp-v2-modal .cp-v2-modal-radio-group label {
+    margin-right: 12px;
+    font-size: 13px;
+    color: var(--cp-text-main);
+}
+.cp-v2-modal input[type="radio"] {
+    margin-left: 8px;
+    margin-right: 6px;
+}
+
+/* tighten modal footer button appearance */
+.cp-v2-modal-footer .cp-v2-button-secondary {
+    background: #f3f6f6;
+    border: 1px solid #e6ecef;
+}
+
+.cp-v2-modal-footer .cp-v2-button-primary {
+    min-width: 90px;
+}
+
+/* make the modal card feel lighter and centered content */
+.cp-v2-modal {
+    padding: 0; /* outer handles positioning; inner contains card */
+}
+.cp-v2-modal-inner {
+    background: #ffffff;
+    padding: 18px 18px 14px;
+    border-radius: 8px;
+}
+
 /* high-level invoice sections */
 .cp-v2-invoice-top {
     display: flex;

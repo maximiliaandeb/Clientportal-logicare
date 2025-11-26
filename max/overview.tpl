@@ -1,3 +1,8 @@
+<?php include __DIR__ . '/profile-modal.tpl'; ?>
+<?php include __DIR__ . '/password-modal.tpl'; ?>
+<?php include __DIR__ . '/question-modal.tpl'; ?>
+<?php include __DIR__ . '/callme-modal.tpl'; ?>
+
 <div>
     <div class="cp-v2-section-title">Komende afspraken</div>
     <a href="#" class="cp-v2-button-primary js-open-appointment-modal" style="margin-top:4px;margin-bottom:8px;">
