@@ -1,0 +1,255 @@
+/* mediaqueries-phone-cp.css
+   Phone / small screen tweaks for client portal
+   -------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+  /* ROOT / LAYOUT */
+
+  .cp-v2-root {
+    padding: 12px 10px;
+  }
+
+  .cp-v2-layout {
+    grid-template-columns: 1fr;   /* stack everything under each other */
+    gap: 12px;
+  }
+
+  /* Show main content first, then right column, then left column */
+  .cp-v2-main { order: 1; }
+  .cp-v2-right { order: 2; }
+  .cp-v2-left { order: 3; }
+
+  .cp-v2-card {
+    padding: 12px 14px;
+  }
+
+  .cp-v2-page-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* TOP TABS + BELL */
+
+  .cp-v2-tabs {
+    margin-bottom: 12px;
+  }
+
+  .cp-v2-tabs-left {
+    gap: 8px;
+    overflow-x: auto;            /* horizontal scroll if they don't fit */
+    padding-bottom: 4px;
+  }
+
+  .cp-v2-tabs-left::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .cp-v2-tab {
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  /* make the bell sit a tiny bit closer to the tabs */
+  .cp-v2-main-bell {
+    margin-bottom: 1px;
+  }
+
+  /* Nudge the bell up slightly to improve vertical centering on small screens */
+  .cp-v2-main-bell {
+    transform: translateY(-6px);
+  }
+
+  /* Notification dropdown: use almost full viewport width */
+  .cp-v2-notify-dropdown {
+    right: 10px;
+    width: calc(100vw - 24px);
+    max-width: 360px;
+  }
+
+
+  /* LEFT SIDEBAR */
+
+  .cp-v2-side-menu {
+    margin-top: 16px;
+    font-size: 13px;
+  }
+
+  .cp-v2-side-menu a {
+    padding: 7px 8px;
+  }
+
+
+  /* APPOINTMENT TILES */
+
+  .cp-v2-appointments-row {
+    grid-template-columns: 1fr;  /* 1 per row on phone */
+    gap: 8px;
+  }
+
+  .cp-v2-appointment-tile {
+    padding-right: 52px;
+    min-height: 56px;
+  }
+
+  .cp-v2-appointment-icon-right {
+    right: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+
+  /* TABLES (To do / facturen / vragenlijsten) */
+
+  .cp-v2-table {
+    font-size: 12px;
+  }
+
+  .cp-v2-table th,
+  .cp-v2-table td {
+    padding: 6px 4px;
+  }
+
+  /* give the last column a bit more room (buttons) */
+  .cp-v2-table td:last-child {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  .cp-v2-chip-button {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+
+  /* RIGHT SIDEBAR CARDS */
+
+  .cp-v2-right-section {
+    margin-bottom: 12px;
+  }
+
+  .cp-v2-questionnaire-row {
+    font-size: 11px;
+  }
+
+  .cp-v2-questionnaire-main {
+    padding: 4px 6px;
+  }
+
+  .cp-v2-invoice-row {
+    gap: 6px;
+  }
+
+  .cp-v2-invoice-amounts {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cp-v2-invoice-amount-block {
+    min-width: 0;
+  }
+
+  .cp-v2-invoice-label {
+    font-size: 10px;
+  }
+
+  .cp-v2-invoice-value {
+    font-size: 11px;
+  }
+
+
+  /* AFSPRAAKSHISTORIE */
+
+  .cp-v2-timeline {
+    font-size: 11px;
+  }
+
+  .cp-v2-timeline-content {
+    padding-left: 4px;
+  }
+
+
+  /* MODAL: full-height style on phone */
+
+  .cp-v2-modal {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);  /* no small scale-in on tiny screens */
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .cp-v2-modal-inner {
+    border-radius: 0;
+    max-height: 100vh;
+    padding: 16px 14px 12px;
+  }
+
+  .cp-v2-modal-header,
+  .cp-v2-modal-body,
+  .cp-v2-modal-footer {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Appointment modal: stack text and calendar under each other */
+  .cp-v2-appointment-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .cp-v2-appointment-calendar {
+    min-height: auto;
+  }
+
+  /* Invoice modal: more vertical layout */
+
+  .cp-v2-invoice-top {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cp-v2-invoice-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cp-v2-invoice-totals {
+    margin-top: 4px;
+  }
+
+  .cp-v2-invoice-totals-inner {
+    min-width: 0;
+  }
+
+  /* Modal: slightly inset from the screen edges */
+  .cp-v2-modal {
+    width: 95%;
+    max-width: 100%;
+  }
+
+  .cp-v2-modal-inner {
+    width: calc(100vw - 6px);   /* 16px margin on left + right */
+    max-width: 480px;            /* in case phone is landscape */
+    margin: 0 auto;
+    padding: 4px 2px 2px;
+    box-sizing: border-box;
+  }
+
+  /* Make the invoice table more compact so it fits comfortably */
+  .cp-v2-invoice-lines {
+    table-layout: fixed;         /* columns share the width */
+  }
+
+  .cp-v2-invoice-lines th,
+  .cp-v2-invoice-lines td {
+    padding: 6px 3px;
+    word-wrap: break-word;
+  }
+
+  .cp-v2-invoice-totals-inner {
+    font-size: 11px;
+  }
+
+}

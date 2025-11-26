@@ -120,6 +120,7 @@
     background: transparent;         /* no chip bg */
     padding: 4px;                    /* still a bit of click area */
     margin-bottom: 3px;
+        transform: translateY(-6px);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -1418,6 +1419,7 @@ button.cp-v2-status-pill:focus-visible {
     background: transparent;
     padding: 4px;
     margin-bottom: 3px;
+    transform: translateY(-6px);
     cursor: pointer;
     display: inline-flex;
     align-items: center;

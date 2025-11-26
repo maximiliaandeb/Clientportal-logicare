@@ -19,6 +19,7 @@ include __DIR__ . '/cp-page-data.php';
 
     <!-- hier kun je later je echte CSS-bestand linken -->
 <link rel="stylesheet" href="../main.css?v=1">
+<link rel="stylesheet" href="../mediaqueries-phone-cp.css">
 
 
 </head>
