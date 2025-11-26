@@ -68,6 +68,13 @@ $openInvoices = array(
     array('nr' => 15, 'date' => '21/09/2025', 'total' => '1400.00', 'due' => '0.00'),
 );
 
+// Alleen facturen die nog iets open hebben (voor de "Te doen" tabel in het midden)
+$todoInvoices = array_filter($openInvoices, function ($inv) {
+    $due = isset($inv['due']) ? (float) str_replace(',', '.', $inv['due']) : 0;
+    return $due > 0.0001;
+});
+
+
 // Welke facturen-tab is actief in de sidebar?
 $invoiceTab = isset($_GET['ftab']) ? $_GET['ftab'] : 'alle';
 $validInvoiceTabs = array('alle', 'openstaand', 'voldaan');
@@ -297,7 +304,7 @@ function cp_v2_appointment_icon($type) {
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($openInvoices as $inv): ?>
+                            <?php foreach ($todoInvoices as $inv): ?>
                                 <tr>
                                     <td><?= (int)$inv['nr'] ?></td>
                                     <td><?= htmlspecialchars($inv['date']) ?></td>
