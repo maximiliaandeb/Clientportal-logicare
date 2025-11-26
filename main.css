@@ -2,15 +2,21 @@
     /* primary brand color */
     --cp-primary: #59a1a7;
 
-    /* tints of the same color, different opacity */
-    --cp-primary-soft: rgba(89, 161, 167, 0.15);   /* used for active backgrounds */
-    --cp-primary-softer: rgba(89, 161, 167, 0.07); /* subtle hovers / fills */
-    --cp-primary-strong: rgba(89, 161, 167, 0.25); /* stronger highlight */
+    /* tints */
+    --cp-primary-soft: rgba(89, 161, 167, 0.15);
+    --cp-primary-softer: rgba(89, 161, 167, 0.07);
+    --cp-primary-strong: rgba(89, 161, 167, 0.25);
 
     /* neutrals */
     --cp-bg: #f5f7fb;
     --cp-border-subtle: #dde1ea;
+
+    /* text colors */
+    --cp-text-main: #1f2937;   /* dark grey (Tailwind gray-800 vibes) */
+    --cp-text-strong: #111827; /* extra strong for rare emphasis */
+    --cp-text-muted: #6b7280;  /* subtitles, labels */
 }
+
 
 /* ROOT / LAYOUT */
 .cp-v2-root {
@@ -18,7 +24,9 @@
     background: var(--cp-bg);
     padding: 20px;
     box-sizing: border-box;
+    color: var(--cp-text-main);
 }
+
 .cp-v2-layout {
     display: grid;
     grid-template-columns: 260px minmax(0, 1fr) 320px;
@@ -106,15 +114,42 @@
 .cp-v2-page-title {
     font-size: 24px;
     margin: 0 0 16px;
-    color: #111827;
+    color: var(--cp-text-main);     /* was #111827 */
     font-weight: 600;
 }
+
 .cp-v2-section-title {
     font-size: 16px;
     font-weight: 600;
     margin: 0 0 8px;
-    color: #111827;
+    color: var(--cp-text-main);     /* was #111827 */
 }
+
+.cp-v2-small-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 16px 0 8px;
+    color: var(--cp-text-main);     /* was #111827 */
+}
+
+.cp-v2-appointment-type {
+    color: var(--cp-text-main);     /* was #111827 */
+}
+
+/* invoice values etc */
+.cp-v2-invoice-value {
+    font-size: 12px;
+    color: var(--cp-text-main);     /* was #111827 */
+}
+
+/* modal title */
+.cp-v2-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 2px;
+    color: var(--cp-text-main);     /* if you see #111827 here */
+}
+
 .cp-v2-small-title {
     font-size: 14px;
     font-weight: 600;
@@ -523,19 +558,6 @@
 
 
 /* MODAL (generic, reusable) */
-.cp-v2-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-}
-
-.cp-v2-modal-backdrop--hidden {
-    display: none;
-}
 
 .cp-v2-modal {
     background: #ffffff;
@@ -659,40 +681,7 @@ button.cp-v2-status-pill:focus-visible {
     outline: none;
 }
 
-/* === MODAL BACKDROP & ANIMATION === */
-.cp-v2-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    /* dark overlay + frosted glass */
-    background: rgba(15, 23, 42, 0.25);
-    backdrop-filter: blur(6px);
-
-    z-index: 9999;
-
-    /* start hidden, animated via extra classes */
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease-out;
-}
-
-/* fully invisible + non-interactive */
-.cp-v2-modal-backdrop--hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* visible state – JS adds/removes this */
-.cp-v2-modal-backdrop--active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
 /* === MODAL OVERLAY + BASIC POSITION / ANIMATION === */
-
 .cp-v2-modal-overlay {
     position: fixed;
     inset: 0;
@@ -972,4 +961,41 @@ button.cp-v2-status-pill:focus-visible {
 
 .cp-v2-button-secondary:hover {
     background: #e5e7eb;
+}
+
+/* RIGHT SIDEBAR – Vragenlijsten */
+
+.cp-v2-questionnaire-list {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cp-v2-questionnaire-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.cp-v2-questionnaire-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.cp-v2-questionnaire-title {
+    font-weight: 500;
+}
+
+.cp-v2-questionnaire-date {
+    font-size: 11px;
+    color: #6b7280;
 }
