@@ -66,6 +66,11 @@
     opacity: 0.6;
 }
 
+/* explicit class to force icon to white even when used outside of primary buttons */
+.cp-v2-icon--white {
+    filter: brightness(0) invert(1) !important;
+}
+
 /* Avatar / header */
 .cp-v2-card-header {
     display: flex;
@@ -220,6 +225,14 @@
     background: var(--cp-primary-soft);
     color: #1f2937;
     font-weight: 600;
+}
+
+/* Hover/focus: change background to requested gray and keep text readable */
+.cp-v2-side-menu a:not(.cp-active):hover,
+.cp-v2-side-menu a:not(.cp-active):focus {
+    background: #CDCDCD;
+    color: var(--cp-text-strong);
+    transform: translateX(2px);
 }
 
 /* PRIMARY BUTTON */

@@ -4,7 +4,7 @@
         &nbsp;Mijn documenten
     </div>
     <a href="?section=documenten_upload" class="cp-v2-button-primary" style="margin-top:4px;margin-bottom:8px;">
-        <img src="../icons/plus-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+        <img src="../icons/plus-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--white" />
         Upload een document
     </a>
 
