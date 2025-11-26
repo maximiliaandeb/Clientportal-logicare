@@ -128,3 +128,50 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const bell = document.getElementById('cp-main-notify-btn');
+    const dropdown = document.getElementById('cp-main-notify-dropdown');
+
+    if (!bell || !dropdown) return;
+
+    function openDropdown() {
+        dropdown.classList.add('cp-v2-notify-dropdown--visible');
+        bell.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeDropdown() {
+        dropdown.classList.remove('cp-v2-notify-dropdown--visible');
+        bell.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleDropdown() {
+        if (dropdown.classList.contains('cp-v2-notify-dropdown--visible')) {
+            closeDropdown();
+        } else {
+            openDropdown();
+        }
+    }
+
+    bell.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleDropdown();
+    });
+
+    // Klikken in de dropdown mag hem niet meteen sluiten
+    dropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+
+    // Klik ergens anders op de pagina => dropdown dicht
+    document.addEventListener('click', function () {
+        closeDropdown();
+    });
+
+    // ESC sluit de dropdown
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeDropdown();
+        }
+    });
+});
