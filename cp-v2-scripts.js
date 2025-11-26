@@ -80,6 +80,19 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
+    /* ---------- openers on main table "Factuur betalen" buttons ---------- */
+
+    document.querySelectorAll('.js-open-invoice-modal').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // use the same helper, it just needs an element with the right data-*
+            fillInvoiceFromRow(btn);
+            openModal();
+        });
+    });
+
+
     /* ---------- closing ---------- */
 
     overlay.addEventListener('click', function () {
