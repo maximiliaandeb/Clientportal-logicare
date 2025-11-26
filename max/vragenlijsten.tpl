@@ -43,13 +43,14 @@
                                  class="cp-v2-icon cp-v2-icon--status" />
                         </span>
                     <?php else: ?>
-                        <!-- Clock + rood bolletje voor 'Te doen' -->
-                        <span class="cp-v2-status-pill cp-v2-status-pill--alert">
-                            <span class="cp-v2-status-pill-badge"></span>
-                            <img src="../icons/clock-countdown-thin.svg"
-                                 alt=""
-                                 class="cp-v2-icon cp-v2-icon--status" />
-                        </span>
+                        <!-- 'Te doen' shows the clock icon directly (no outer circle) sized to match the status pill -->
+                            <span class="cp-v2-questionnaire-icon-wrap">
+                                <img src="../icons/clock-countdown-thin.svg"
+                                     alt=""
+                                     class="cp-v2-icon cp-v2-icon--questionnaire-status" />
+                                <span class="cp-v2-questionnaire-badge" aria-hidden="true"></span>
+                            </span>
+                    
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
