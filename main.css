@@ -223,16 +223,21 @@
 }
 .cp-v2-side-menu a.cp-active {
     background: var(--cp-primary-soft);
-    color: #1f2937;
+    color: #59a1a7;
     font-weight: 600;
+}
+
+/* tint the icon in the active side-menu item to match the active text color (primary) */
+.cp-v2-side-menu a.cp-active .cp-v2-icon {
+    /* filter tuned to the primary color #59a1a7 */
+    filter: invert(56%) sepia(8%) saturate(980%) hue-rotate(136deg) brightness(94%) contrast(90%);
 }
 
 /* Hover/focus: change background to requested gray and keep text readable */
 .cp-v2-side-menu a:not(.cp-active):hover,
 .cp-v2-side-menu a:not(.cp-active):focus {
-    background: #CDCDCD;
+    background: #00000009;
     color: var(--cp-text-strong);
-    transform: translateX(2px);
 }
 
 /* PRIMARY BUTTON */
