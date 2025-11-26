@@ -329,6 +329,11 @@
     filter: invert(56%) sepia(8%) saturate(980%) hue-rotate(136deg) brightness(94%) contrast(90%);
 }
 
+/* helper class to force icons to white (useful for icons inside dark primary buttons) */
+.cp-v2-icon--white {
+    filter: invert(100%) brightness(1);
+}
+
 /* ROW ACTIONS */
 .cp-v2-row-actions {
     display: flex;
