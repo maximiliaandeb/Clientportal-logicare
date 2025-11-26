@@ -962,3 +962,40 @@ button.cp-v2-status-pill:focus-visible {
 .cp-v2-button-secondary:hover {
     background: #e5e7eb;
 }
+
+/* RIGHT SIDEBAR – Vragenlijsten */
+
+.cp-v2-questionnaire-list {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cp-v2-questionnaire-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.cp-v2-questionnaire-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.cp-v2-questionnaire-title {
+    font-weight: 500;
+}
+
+.cp-v2-questionnaire-date {
+    font-size: 11px;
+    color: #6b7280;
+}
