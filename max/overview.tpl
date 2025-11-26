@@ -1,23 +1,25 @@
 <div>
     <div class="cp-v2-section-title">Komende afspraken</div>
-    <a href="#" class="cp-v2-button-primary" style="margin-top:4px;margin-bottom:8px;">
+    <a href="#" class="cp-v2-button-primary js-open-appointment-modal" style="margin-top:4px;margin-bottom:8px;">
         <img src="../icons/plus-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--white" />
         Maak een nieuwe afspraak
     </a>
     <div class="cp-v2-appointments-row">
         <?php foreach ($upcomingAppointments as $afs): ?>
-            <article class="cp-v2-appointment-tile">
-                <div class="cp-v2-appointment-date">
+            <div class="cp-v2-appointment-wrap">
+                <div class="cp-v2-appointment-date cp-v2-appointment-date--above">
                     <?= htmlspecialchars($afs['date']) ?>
                 </div>
-                <div class="cp-v2-appointment-type">
-                    <img src="<?= cp_v2_appointment_icon($afs['type']) ?>" alt="" class="cp-v2-icon cp-v2-icon--small" />
-                    <span><?= htmlspecialchars($afs['type']) ?></span>
-                </div>
-                <div class="cp-v2-appointment-time">
-                    <?= htmlspecialchars($afs['time']) ?>
-                </div>
-            </article>
+                <article class="cp-v2-appointment-tile" tabindex="0">
+                    <div class="cp-v2-appointment-type">
+                        <span><?= htmlspecialchars($afs['type']) ?></span>
+                    </div>
+                    <div class="cp-v2-appointment-time">
+                        <?= htmlspecialchars($afs['time']) ?>
+                    </div>
+                    <img src="<?= cp_v2_appointment_icon($afs['type']) ?>" alt="" class="cp-v2-icon cp-v2-icon--large cp-v2-appointment-icon-right" />
+                </article>
+            </div>
         <?php endforeach; ?>
     </div>
 </div>

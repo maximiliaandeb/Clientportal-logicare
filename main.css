@@ -50,11 +50,12 @@
 }
 
 /* Icons */
-.cp-v2-icon {
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-    flex-shrink: 0;
+.cp-v2-modal .cp-v2-button-primary {
+    background: var(--cp-primary-softer); /* light, opaque teal */
+    color: var(--cp-text-main);
+    /* stronger idle border so primary reads as actionable */
+    border: 1px solid var(--cp-primary-strong);
+    transition: background 120ms ease, color 120ms ease, transform 120ms ease;
 }
 .cp-v2-icon--small {
     width: 16px;
@@ -68,9 +69,16 @@
     opacity: 0.6;
 }
 
-/* explicit class to force icon to white even when used outside of primary buttons */
-.cp-v2-icon--white {
-    filter: brightness(0) invert(1) !important;
+.cp-v2-modal .cp-v2-button-secondary {
+    background: var(--cp-primary-soft);
+    color: var(--cp-text-main);
+    border: 1px solid rgba(89,161,167,0);
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.cp-v2-modal .cp-v2-button-secondary:hover,
+.cp-v2-modal .cp-v2-button-secondary:focus {
+    background: var(--cp-primary-strong);
+    border-color: rgba(89,161,167,0.25);
 }
 
 /* Avatar / header */
@@ -249,12 +257,19 @@
     font-weight: 600;
 }
 
-/* Hover/focus: change background to requested gray and keep text readable */
+/* Dark hover/focus: whole bar turns dark and text/icons become white */
 .cp-v2-side-menu a:not(.cp-active):hover,
 .cp-v2-side-menu a:not(.cp-active):focus {
-    background: #CDCDCD;
+    /* updated hover to a medium gray */
+    background: #A9A9A9;
     color: var(--cp-text-strong);
     transform: translateX(2px);
+}
+
+/* icons in the left menu invert to white when the item is dark */
+.cp-v2-side-menu a.cp-active .cp-v2-icon {
+    /* only invert icons for the active item (keep hover icons unchanged for light hover) */
+    filter: invert(100%) brightness(1);
 }
 
 /* PRIMARY BUTTON */
@@ -268,6 +283,11 @@
     color: #ffffff;
     text-decoration: none;
     font-size: 13px;
+}
+
+/* make all icons inside primary buttons white by default */
+.cp-v2-button-primary .cp-v2-icon {
+    filter: invert(100%) brightness(1);
 }
 
 /* APPOINTMENT TILES */
@@ -284,20 +304,88 @@
     font-size: 13px;
     border: 1px solid #e5e7eb;
 }
+
+.cp-v2-appointment-wrap {
+    display: block;
+}
+
+.cp-v2-appointment-date--above {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 6px 0 6px 4px;
+}
+
+.cp-v2-appointment-tile {
+    transition: background 160ms ease, transform 120ms ease, border-color 120ms ease;
+    cursor: pointer;
+    position: relative; /* allow absolute-positioning the icon on the right */
+    padding-right: 64px; /* space for the large right-side icon */
+    min-height: 64px;
+    z-index: 0;
+}
+
+/* Hover state: opaque/soft green background, text and icon tint to main green */
+.cp-v2-appointment-tile:hover {
+    background: var(--cp-primary-soft);
+    border-color: rgba(89,161,167,0.25);
+}
+
+.cp-v2-appointment-tile:hover .cp-v2-appointment-type,
+.cp-v2-appointment-tile:hover .cp-v2-appointment-date,
+.cp-v2-appointment-tile:hover .cp-v2-appointment-time {
+    color: var(--cp-primary);
+}
+
+.cp-v2-appointment-tile:hover .cp-v2-icon {
+    /* reuse the primary icon tint filter used elsewhere */
+    filter: invert(56%) sepia(8%) saturate(980%) hue-rotate(136deg) brightness(94%) contrast(90%);
+}
 .cp-v2-appointment-date {
     font-weight: 600;
     margin-bottom: 2px;
 }
 .cp-v2-appointment-type {
     color: #111827;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 2px;
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+.cp-v2-appointment-type img.cp-v2-icon {
+    display: none; /* old inline icon hidden; we use a separate right-side icon */
+}
+
+.cp-v2-appointment-icon-right {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    opacity: 0.95;
+    pointer-events: none; /* ensure hover targets the tile, not the icon */
+}
+.cp-v2-appointment-type span {
+    display: block;
+    font-weight: 600;
+    color: inherit;
 }
 .cp-v2-appointment-time {
     color: #4b5563;
     font-size: 12px;
+    margin-top: 2px;
+}
+
+/* reinforce hover transform and ensure hover works even when icon overlays */
+.cp-v2-appointment-tile:hover,
+.cp-v2-appointment-tile:focus {
+    transform: translateY(-2px);
+}
+
+/* Ensure keyboard users see the same hover/focus styles */
+.cp-v2-appointment-tile:focus,
+.cp-v2-appointment-tile:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(89,161,167,0.08);
 }
 
 /* TABLES */
@@ -663,6 +751,107 @@
     color: #374151;
 }
 
+/* Appointment modal layout */
+.cp-v2-appointment-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 18px;
+    align-items: start;
+}
+
+.cp-v2-appointment-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.cp-v2-appointment-option,
+.cp-v2-modal .cp-v2-button-primary,
+.cp-v2-modal .cp-v2-button-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--cp-primary-soft);
+    border: 1px solid rgba(89,161,167,0);
+    color: #1f2937;
+    font-size: 11px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cp-v2-appointment-option .cp-v2-icon,
+.cp-v2-modal .cp-v2-button-primary .cp-v2-icon,
+.cp-v2-modal .cp-v2-button-secondary .cp-v2-icon {
+    margin: 0;
+}
+
+.cp-v2-appointment-option.is-selected {
+    background: var(--cp-primary);
+    color: #ffffff;
+    border-color: rgba(89,161,167,0.25);
+    box-shadow: 0 6px 12px rgba(15, 23, 42, 0.06);
+}
+
+.cp-v2-appointment-calendar {
+    min-height: 260px;
+}
+
+.cp-v2-calendar {
+    border: 1px solid #eef2f2;
+    border-radius: 8px;
+    padding: 8px;
+    background: #ffffff;
+}
+
+.cp-v2-calendar-header {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--cp-text-main);
+}
+
+.cp-v2-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    align-items: center;
+}
+
+.cp-v2-calendar-day {
+    font-size: 12px;
+    color: #6b7280;
+    text-align: left;
+}
+
+.cp-v2-calendar-cell {
+    min-height: 34px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #374151;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.cp-v2-calendar-cell:hover {
+    background: var(--cp-primary-softer);
+}
+
+.cp-v2-calendar-cell.is-today {
+    background: #e8f6f6;
+    border-color: rgba(89,161,167,0.25);
+}
+
+.cp-v2-calendar-cell.is-selected {
+    background: var(--cp-primary);
+    color: #fff;
+}
+
 .cp-v2-modal-row {
     display: flex;
     justify-content: space-between;
@@ -786,9 +975,10 @@ button.cp-v2-status-pill:focus-visible {
 /* ==== INVOICE LAYOUT INSIDE MODAL ==== */
 
 .cp-v2-modal-inner {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    /* No separate inner card look — let the outer .cp-v2-modal be the card */
+    background: transparent;
+    border-radius: 8px;
+    box-shadow: none;
     max-width: 640px;
     width: 100%;
     max-height: 90vh;
@@ -984,6 +1174,53 @@ button.cp-v2-status-pill:focus-visible {
     gap: 8px;
 }
 
+/* Remove unwanted focus outline / black border on primary modal buttons */
+.cp-v2-modal-footer .cp-v2-button-primary {
+    border: none;
+    box-shadow: none;
+}
+.cp-v2-button-primary:focus,
+.cp-v2-button-primary:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Modal buttons & appointment options: use the same chip/pill appearance as other chips */
+.cp-v2-modal .cp-v2-button-primary,
+.cp-v2-modal .cp-v2-button-secondary,
+.cp-v2-appointment-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--cp-primary-soft);
+    border: 1px solid rgba(89,161,167,0);
+    color: #1f2937;
+    font-size: 11px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 120ms ease, color 120ms ease, transform 120ms ease, border-color 120ms ease;
+}
+
+/* Primary modal actions (e.g. "Maak afspraak", "Betaal nu"): on hover become the solid primary green */
+.cp-v2-modal .cp-v2-button-primary:hover,
+.cp-v2-modal .cp-v2-button-primary:focus {
+    background: var(--cp-primary);
+    color: #ffffff;
+    border-color: rgba(89,161,167,0.25);
+}
+
+/* Secondary modal actions and appointment option hover should use the chip hover style (subtle stronger bg) */
+.cp-v2-modal .cp-v2-button-secondary:hover,
+.cp-v2-modal .cp-v2-button-secondary:focus,
+.cp-v2-appointment-option:hover,
+.cp-v2-appointment-option:focus {
+    background: var(--cp-primary-strong);
+    border: 1px solid rgba(89,161,167,0.25);
+    color: #1f2937;
+}
+
 /* little tweak: "secondary" button style for print / cancel */
 .cp-v2-button-secondary {
     display: inline-flex;
@@ -991,7 +1228,7 @@ button.cp-v2-status-pill:focus-visible {
     justify-content: center;
     padding: 6px 12px;
     border-radius: 6px;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--cp-border-subtle);
     background: #ffffff;
     font-size: 12px;
     text-decoration: none;
