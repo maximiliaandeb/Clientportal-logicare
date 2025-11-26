@@ -659,6 +659,12 @@
     border: 1px solid #e5e7eb;
 }
 
+/* Make the credit-card icon inside alert pills larger so it matches visual weight */
+.cp-v2-status-pill--alert .cp-v2-icon--status {
+    width: 18px;
+    height: 18px;
+}
+
 /* rood notificatie-badge rechtsboven */
 .cp-v2-status-pill-badge {
     position: absolute;
@@ -673,8 +679,8 @@
 
 /* icon size inside status pill */
 .cp-v2-icon--status {
-    width: 11px;
-    height: 11px;
+    width: 15px;
+    height: 15px;
 }
 
 /* maak de check wit in de groene cirkel */
@@ -882,8 +888,8 @@
 }
 
 .cp-v2-status-pill--ok .cp-v2-icon {
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
     filter: brightness(0) invert(1); /* make check white */
 }
 
@@ -892,6 +898,13 @@
     position: relative;
     background: #f9fafb;
     border: 1px solid #e5e7eb;
+}
+
+/* Questionnaire-specific status icon (todo): make the icon itself the same diameter as the status pill */
+.cp-v2-icon--questionnaire-status {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
 }
 
 .cp-v2-status-pill-badge {
@@ -941,12 +954,14 @@ button.cp-v2-status-pill:focus-visible {
     opacity: 0;
     z-index: 999;
     transition: transform 0.18s ease-out, opacity 0.18s ease-out;
+    pointer-events: none; /* don't block pointer events when hidden */
 }
 
 /* zichtbaar + geanimeerd naar binnen */
 .cp-v2-modal--visible {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
+    pointer-events: auto; /* allow interaction when visible */
 }
 
 
@@ -1259,6 +1274,30 @@ button.cp-v2-status-pill:focus-visible {
     justify-content: space-between;
     gap: 8px;
     font-size: 12px;
+}
+
+/* position the row so the notification badge can be absolutely placed near the right-side icon */
+.cp-v2-questionnaire-row {
+    position: relative;
+}
+
+/* small red notification dot for todo questionnaires (overlaps the clock icon) */
+.cp-v2-questionnaire-icon-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+/* small red notification dot for todo questionnaires (overlaps the clock icon)
+   positioned to top-right of the icon to match other notify dots */
+.cp-v2-questionnaire-badge {
+    position: absolute;
+    top: -4px;    /* nudged up to avoid covering the clock hands */
+    right: -4px;  /* nudged right to sit outside the icon */
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #f97373; /* red */
+    border: 2px solid #f9fafb; /* match bell dot ring */
 }
 
 .cp-v2-questionnaire-main {
