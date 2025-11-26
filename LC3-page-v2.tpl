@@ -477,7 +477,7 @@ function cp_v2_appointment_icon($type) {
                     <?php if ($q['status'] === 'voldaan'): ?>
                         <!-- Groen check-icoon -->
                         <span class="cp-v2-status-pill cp-v2-status-pill--ok">
-                            <img src="icons/check-circle-thin.svg"
+                            <img src="icons/check-bold.svg"
                                  alt=""
                                  class="cp-v2-icon cp-v2-icon--status" />
                         </span>
