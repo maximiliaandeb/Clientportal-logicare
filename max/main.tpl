@@ -1,4 +1,4 @@
 <?php include 'sidebar-top.tpl'; ?>
-<?php include 'afspraakhistorie.tpl'; ?>
+<?php include 'vragenlijsten.tpl'; ?>
 <?php include 'facturen.tpl'; ?>
-<?php include 'footer.tpl'; ?>
+<?php include 'afspraakhistorie.tpl'; ?>
