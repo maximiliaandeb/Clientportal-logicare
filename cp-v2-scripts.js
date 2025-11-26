@@ -1,36 +1,39 @@
 document.addEventListener('DOMContentLoaded', function () {
     const overlay = document.querySelector('.cp-v2-modal-overlay');
-    const modal   = document.querySelector('.cp-v2-modal');
-    const modalInner = modal ? modal.querySelector('.cp-v2-modal-inner') : null;
-    if (!overlay || !modal || !modalInner) return;
+    const modals  = Array.from(document.querySelectorAll('.cp-v2-modal'));
+    if (!overlay) return;
 
     const body = document.body;
 
-    // invoice fields in modal
-    const elNr       = document.getElementById('cp-invoice-number');
-    const elDate     = document.getElementById('cp-invoice-date');
-    const elLineRate = document.getElementById('cp-invoice-line-rate');
-    const elLineTotal= document.getElementById('cp-invoice-line-total');
-    const elSubtotal = document.getElementById('cp-invoice-subtotal');
-    const elTotal    = document.getElementById('cp-invoice-total');
-    const elDue      = document.getElementById('cp-invoice-due');
-    const elDueRow   = document.getElementById('cp-invoice-due-row');
-
-    const btnPrint   = document.getElementById('cp-invoice-print-btn');
-    const btnPay     = document.getElementById('cp-invoice-pay-btn');
-
-    /* ---------- helpers ---------- */
-
-    function openModal() {
+    /* ---------- modal helpers (multi-modal) ---------- */
+    function openModal(modalEl) {
+        if (!modalEl) return;
+        modals.forEach(m => m.classList.remove('cp-v2-modal--visible'));
         overlay.classList.add('cp-v2-modal-overlay--visible');
-        modal.classList.add('cp-v2-modal--visible');
+        modalEl.classList.add('cp-v2-modal--visible');
         body.classList.add('cp-v2-modal-open');
     }
 
     function closeModal() {
-        modal.classList.remove('cp-v2-modal--visible');
+        modals.forEach(m => m.classList.remove('cp-v2-modal--visible'));
         overlay.classList.remove('cp-v2-modal-overlay--visible');
         body.classList.remove('cp-v2-modal-open');
+    }
+
+    /* ---------- invoice-specific elements & helpers ---------- */
+    const invoiceModal = document.getElementById('cp-v2-invoice-modal');
+    let elNr, elDate, elLineRate, elLineTotal, elSubtotal, elTotal, elDue, elDueRow, btnPrint, btnPay;
+    if (invoiceModal) {
+        elNr       = invoiceModal.querySelector('#cp-invoice-number');
+        elDate     = invoiceModal.querySelector('#cp-invoice-date');
+        elLineRate = invoiceModal.querySelector('#cp-invoice-line-rate');
+        elLineTotal= invoiceModal.querySelector('#cp-invoice-line-total');
+        elSubtotal = invoiceModal.querySelector('#cp-invoice-subtotal');
+        elTotal    = invoiceModal.querySelector('#cp-invoice-total');
+        elDue      = invoiceModal.querySelector('#cp-invoice-due');
+        elDueRow   = invoiceModal.querySelector('#cp-invoice-due-row');
+        btnPrint   = invoiceModal.querySelector('#cp-invoice-print-btn');
+        btnPay     = invoiceModal.querySelector('#cp-invoice-pay-btn');
     }
 
     function formatEuro(value) {
@@ -67,42 +70,104 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* ---------- openers on invoice rows ---------- */
-
     document.querySelectorAll('.cp-v2-invoice-row').forEach(row => {
-        // both the pill and the number open the modal
         row.querySelectorAll('.cp-v2-invoice-open, .cp-v2-invoice-number')
             .forEach(trigger => {
                 trigger.addEventListener('click', function (e) {
                     e.preventDefault();
                     fillInvoiceFromRow(row);
-                    openModal();
+                    if (invoiceModal) openModal(invoiceModal);
                 });
             });
     });
 
     /* ---------- openers on main table "Factuur betalen" buttons ---------- */
-
     document.querySelectorAll('.js-open-invoice-modal').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
-
-            // use the same helper, it just needs an element with the right data-*
             fillInvoiceFromRow(btn);
-            openModal();
+            if (invoiceModal) openModal(invoiceModal);
         });
     });
 
+    /* ---------- openers for appointment modal ---------- */
+    const appointmentModal = document.getElementById('cp-v2-appointment-modal');
+    document.querySelectorAll('.js-open-appointment-modal').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (appointmentModal) openModal(appointmentModal);
+        });
+    });
+
+    /* ---------- appointment modal interactions ---------- */
+    if (appointmentModal) {
+        const optionButtons = Array.from(appointmentModal.querySelectorAll('.cp-v2-appointment-option'));
+        const calendarCells = Array.from(appointmentModal.querySelectorAll('.cp-v2-calendar-cell'));
+        const createBtn = appointmentModal.querySelector('#cp-appointment-create-btn');
+        let selectedType = null;
+        let selectedDate = null;
+
+        // default: select first type
+        if (optionButtons.length) {
+            optionButtons.forEach(b => b.classList.remove('is-selected'));
+            optionButtons[0].classList.add('is-selected');
+            selectedType = optionButtons[0].dataset.aptType || null;
+        }
+
+        optionButtons.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                optionButtons.forEach(b => {
+                    b.classList.remove('is-selected');
+                    // swap primary/secondary classes so selected looks primary
+                    b.classList.remove('cp-v2-button-primary');
+                    b.classList.add('cp-v2-button-secondary');
+                    // ensure icon color reset
+                    const icon = b.querySelector('.cp-v2-icon');
+                    if (icon) icon.classList.remove('cp-v2-icon--white');
+                });
+                btn.classList.add('is-selected');
+                btn.classList.remove('cp-v2-button-secondary');
+                btn.classList.add('cp-v2-button-primary');
+                // make selected icon white
+                const selIcon = btn.querySelector('.cp-v2-icon');
+                if (selIcon) selIcon.classList.add('cp-v2-icon--white');
+                selectedType = btn.dataset.aptType || null;
+            });
+        });
+
+        calendarCells.forEach(cell => {
+            cell.addEventListener('click', function (e) {
+                e.preventDefault();
+                calendarCells.forEach(c => c.classList.remove('is-selected'));
+                cell.classList.add('is-selected');
+                // store date; if cell has data-day use it, else use text
+                selectedDate = cell.dataset.day || cell.textContent.trim();
+            });
+        });
+
+        if (createBtn) {
+            createBtn.addEventListener('click', function () {
+                if (!selectedType) {
+                    alert('Kies eerst het type afspraak');
+                    return;
+                }
+                if (!selectedDate) {
+                    alert('Kies eerst een datum');
+                    return;
+                }
+                // For now just show a confirmation; later POST to server
+                alert('Maak afspraak: ' + selectedType + ' op ' + selectedDate);
+                closeModal();
+            });
+        }
+    }
 
     /* ---------- closing ---------- */
+    overlay.addEventListener('click', function () { closeModal(); });
 
-    overlay.addEventListener('click', function () {
-        closeModal();
-    });
-
-    modal.querySelectorAll('[data-modal-close]').forEach(btn => {
-        btn.addEventListener('click', function () {
-            closeModal();
-        });
+    document.querySelectorAll('.cp-v2-modal [data-modal-close]').forEach(btn => {
+        btn.addEventListener('click', function () { closeModal(); });
     });
 
     document.addEventListener('keydown', function (e) {
@@ -112,18 +177,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /* ---------- print ---------- */
-
     if (btnPrint) {
-        btnPrint.addEventListener('click', function () {
-            window.print();
-        });
+        btnPrint.addEventListener('click', function () { window.print(); });
     }
 
     /* ---------- fake pay action for now ---------- */
-
     if (btnPay) {
         btnPay.addEventListener('click', function () {
-            // hier kun je later naar Mollie/Ideal/whatever redirecten
             alert('Betaalflow kan hier gestart worden 🙂');
         });
     }
