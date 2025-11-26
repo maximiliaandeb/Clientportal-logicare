@@ -13,12 +13,18 @@
 
     <div style="margin-top:16px;display:flex;gap:8px;">
         <a href="#" class="cp-v2-button-primary">
-            <img src="../icons/check-bold.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
+            <img src="../icons/check-bold.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--white" />
             Opslaan
         </a>
         <a href="#" class="cp-v2-chip-button">
             <img src="../icons/trash-simple-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny" />
             Verwijderen
+        </a>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px;">
+        <a href="#" class="cp-v2-chip-button">
+            <img src="../icons/file-arrow-up-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small cp-v2-icon--white" />
+            Upload
         </a>
     </div>
 </div>
