@@ -7,7 +7,7 @@ if (!isset($_GET['section'])) {
 }
 
 // Include the page data (variables + helpers) so the widget templates can access them
-include __DIR__ . '/page-data.php';
+include __DIR__ . '/cp-page-data.php';
 ?>
 <!doctype html>
 <html lang="nl">
