@@ -51,10 +51,7 @@
             <img src="../icons/key-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
             Wijzig wachtwoord
         </a>
-        <a href="?section=documenten" class="<?= $section=='documenten' || $section=='documenten_upload' ? 'cp-active' : '' ?>">
-            <img src="../icons/download-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
-            Downloads / Documenten
-        </a>
+        <!-- Downloads / Documenten removed from sidenav (now accessible via top tabs) -->
         <a href="#" class="js-open-callme-modal">
             <img src="../icons/phone-call-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--small" />
             Bel me terug
