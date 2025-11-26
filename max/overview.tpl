@@ -1,6 +1,6 @@
 <div>
     <div class="cp-v2-section-title">Komende afspraken</div>
-    <a href="#" class="cp-v2-button-primary" style="margin-top:4px;margin-bottom:8px;">
+    <a href="#" class="cp-v2-button-primary js-open-appointment-modal" style="margin-top:4px;margin-bottom:8px;">
         <img src="../icons/plus-thin.svg" alt="" class="cp-v2-icon cp-v2-icon--tiny cp-v2-icon--white" />
         Maak een nieuwe afspraak
     </a>

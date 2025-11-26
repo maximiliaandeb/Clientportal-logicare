@@ -19,5 +19,6 @@
 </div>
 
 <?php include __DIR__ . '/invoice-modal.tpl'; ?>
+<?php include __DIR__ . '/appointment-modal.tpl'; ?>
 
 <script src="/Clientportal-logicare/cp-v2-scripts.js"></script>
