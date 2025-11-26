@@ -88,11 +88,45 @@
 /* TABS TOP */
 .cp-v2-tabs {
     display: flex;
-    gap: 12px;
+    justify-content: space-between;      /* tabs left, bell right */
+    align-items: flex-end;               /* bottom-align with tabs */
     margin-bottom: 16px;
     border-bottom: 1px solid var(--cp-border-subtle);
+}
+
+/* group the tabs on the left */
+.cp-v2-tabs-left {
+    display: flex;
+    gap: 12px;
     align-items: flex-end;
 }
+
+/* Bell button on the right */
+.cp-v2-main-bell {
+    border: none;                    /* no ring */
+    background: transparent;         /* no chip bg */
+    padding: 4px;                    /* still a bit of click area */
+    margin-bottom: 3px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* make the bell a bit bigger + use muted text color */
+.cp-v2-main-bell-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--cp-text-muted);
+    opacity: 0.8;
+}
+
+.cp-v2-main-bell:hover .cp-v2-main-bell-icon {
+    opacity: 1;
+}
+
+
 .cp-v2-tab {
     padding: 10px 16px;
     border-radius: 6px 6px 0 0;
@@ -251,9 +285,9 @@
     align-items: center;
     justify-content: center;
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: 4px;
     background: var(--cp-primary-soft);   /* SAME as Wijzig profiel */
-    border: 1px solid rgba(89, 161, 167, 0.25); /* subtle edge */
+    border: 1px solid rgba(89, 161, 167, 0);
     font-size: 11px;
     text-decoration: none;
     color: #1f2937;
@@ -262,6 +296,7 @@
 
 .cp-v2-chip-button:hover {
     background: var(--cp-primary-strong);
+        border: 1px solid rgba(89, 161, 167, 0.25); /* subtle edge */
 }
 
 
@@ -412,12 +447,8 @@
     background: rgba(89, 161, 167, 0.25); /* slightly stronger for 'ok' */
 }
 
-/* Kleine bell rechtsboven in de main (notificatie) */
-.cp-v2-main-bell {
-    position: absolute;
-    top: 18px;
-    right: 20px;
-}
+
+
 /* sidebar FACTUREN subtabs */
 .cp-v2-subtabs {
     display: flex;
@@ -999,3 +1030,145 @@ button.cp-v2-status-pill:focus-visible {
     font-size: 11px;
     color: #6b7280;
 }
+
+/* --- Notifications dropdown / top tabs --- */
+
+.cp-v2-tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--cp-border-subtle);
+}
+
+.cp-v2-tabs-left {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.cp-v2-tabs-right {
+    display: flex;
+    align-items: flex-end;
+    position: relative; /* anchor for dropdown */
+}
+
+/* Bell button */
+
+.cp-v2-main-bell {
+    border: none;
+    background: transparent;
+    padding: 4px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cp-v2-main-bell-inner {
+    position: relative;
+    display: inline-flex;
+}
+
+.cp-v2-main-bell-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--cp-text-muted);
+    opacity: 0.8;
+}
+
+.cp-v2-main-bell:hover .cp-v2-main-bell-icon {
+    opacity: 1;
+}
+
+/* Red dot on bell when there are notifications */
+
+.cp-v2-notify-dot {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #f97373;
+    border: 2px solid #f9fafb;
+}
+
+/* Dropdown panel */
+
+.cp-v2-notify-dropdown {
+    position: absolute;
+    right: -8px;                     /* kleine tik naar rechts */
+    top: calc(100% + 10px);
+    width: 300px;                    /* iets smaller, minder “lucht” rechts */
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+    border: 1px solid var(--cp-border-subtle);
+    padding: 8px 0;
+    display: none;
+    z-index: 40;
+}
+
+
+.cp-v2-notify-dropdown--visible {
+    display: block;
+}
+
+.cp-v2-notify-header {
+    padding: 6px 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cp-text-main);
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.cp-v2-notify-empty {
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--cp-text-muted);
+}
+
+.cp-v2-notify-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.cp-v2-notify-item:hover {
+    background: var(--cp-primary-softer);   /* jouw semi-transparante groen */
+}
+
+.cp-v2-notify-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 16px;                 /* iets meer lucht links/rechts */
+    font-size: 12px;
+    color: var(--cp-text-main);
+    cursor: pointer;
+}
+
+.cp-v2-notify-item + .cp-v2-notify-item {
+    border-top: 1px solid #e5e7eb;      /* iets donkerder grijs, beter zichtbaar */
+}
+
+
+.cp-v2-notify-item-icon {
+    margin-top: 6px;
+}
+
+.cp-v2-notify-title {
+    font-weight: 500;
+}
+
+.cp-v2-notify-meta {
+    font-size: 11px;
+    color: var(--cp-text-muted);
+}
+
+/* (optional) per-type accent:
+.cp-v2-notify-item--invoice .cp-v2-notify-title { }
+.cp-v2-notify-item--questionnaire .cp-v2-notify-title { }
+*/
